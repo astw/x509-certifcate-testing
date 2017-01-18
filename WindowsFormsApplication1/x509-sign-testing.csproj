@@ -67,6 +67,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="certificate\fd-export-from-import.pfx" />
+    <None Include="certificate\fd-private-and-public.pem" />
+    <None Include="certificate\fd-private-exported.pfx" />
+    <None Include="certificate\fd-private.pem" />
+    <None Include="certificate\fd-public.key" />
+    <None Include="certificate\fd-public.pem" />
+    <None Include="certificate\fd.crt" />
+    <None Include="certificate\fd.csr" />
+    <None Include="certificate\fd.key" />
+    <None Include="certificate\fd.pem" />
+    <None Include="certificate\fd.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
