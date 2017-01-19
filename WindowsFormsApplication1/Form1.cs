@@ -77,9 +77,7 @@ namespace WindowsFormsApplication1
             {
                 Console.WriteLine("Encryption or decrypt finished successfully -- PFX ");
             }
-        }
-        
-
+        } 
 
         /// <summary>
         /// Here to create import the certificate which only include public key  (CRT) 
@@ -182,6 +180,208 @@ namespace WindowsFormsApplication1
                     }
                 }
             }
+        }
+
+        private void zipfolder_Click(object sender, EventArgs e)
+        {
+            var folder = @"..\..\fileStore\source\";
+            var uniqueName = Guid.NewGuid().ToString();
+            var targetFileName = @"..\..\fileStore\target\" + uniqueName + ".zip";
+
+            var sourceFileHashes = GetFileHashes(folder); 
+             
+            ZipFile.CreateFromDirectory(folder, targetFileName);
+
+            ZipFile.ExtractToDirectory(targetFileName, @"..\..\fileStore\target\" + uniqueName);
+
+            var targetFileHashes = GetFileHashes(@"..\..\fileStore\target\" + uniqueName);
+
+            for(int i=0; i< sourceFileHashes.Count; i++)
+            {
+                var sfh = sourceFileHashes[i]; 
+                var tfs = targetFileHashes[i];
+                if (sfh.Equals(tfs))
+                {
+                    Console.WriteLine("File:{0} passed", sfh.FileName);
+                }
+            }
+
+        }
+
+        private void CompressToZip(string outPutfileName, Dictionary<string, byte[]> fileList)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, leaveOpen: true))
+                {
+                    foreach (var file in fileList)
+                    {
+                        var demoFile = archive.CreateEntry(file.Key);
+
+                        using (var entryStream = demoFile.Open())
+                        using (var b = new BinaryWriter(entryStream))
+                        {
+                            b.Write(file.Value);
+                        }
+                    }
+                }
+
+                using (var fileStream = new FileStream(outPutfileName, FileMode.Create))
+                {
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+                    memoryStream.CopyTo(fileStream);
+                }
+            }
+        }
+
+        private List<FileHash> GetFileHashes(string folder)
+        {
+            var hashes = new List<FileHash>();
+
+            var files = Directory.GetFiles(folder);  
+            hashes = files.Select(fileName =>
+            {
+                return new FileHash(fileName, CalculateFileHash(fileName));
+            }).ToList<FileHash>();
+
+            return hashes;   
+        }
+
+
+        private string CalculateFileHash(string fileName)
+        { 
+            var data = File.ReadAllBytes(fileName);
+            return ComputeHash(data);
+        }
+
+        private string ComputeHash(byte[] data)
+        {
+            using (var sha256 = new SHA256Managed())
+            {
+                var hash = sha256.ComputeHash(data);
+
+                var hex = ByteArrayToString(hash).ToLowerInvariant();
+                return hex;
+            }
+        }
+
+        private string ByteArrayToString(byte[] ba)
+        {
+            string hex = BitConverter.ToString(ba);
+            return hex.Replace("-", "");
+        }
+
+        private void zipFolderAndEncryptHash_Click(object sender, EventArgs e)
+        {
+            var folder = @"..\..\fileStore\source\";
+            var uniqueName = Guid.NewGuid().ToString();
+            var targetFileName = @"..\..\fileStore\target\" + uniqueName + ".zip";
+
+            var sourceFileHashes = GetFileHashes(folder);
+
+            ZipFile.CreateFromDirectory(folder, targetFileName);
+
+            var zipFileHash = CalculateFileHash(targetFileName);
+            var hashBytes = Encoding.UTF8.GetBytes(zipFileHash); 
+
+            var cert = Get_PFX_Certificate();
+            RSACryptoServiceProvider privateKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PrivateKey;
+            RSACryptoServiceProvider publicKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PublicKey.Key;
+
+            //Other program is using public key to encrypt 
+            var encryptedHashBytes = publicKeyRSACryptoServiceProvider.Encrypt(hashBytes, false);
+
+            //This program is using private key to decrypt   
+            var decryptedHashBytes = privateKeyRSACryptoServiceProvider.Decrypt(encryptedHashBytes, false); 
+
+            var decryptedHashString = Encoding.UTF8.GetString(decryptedHashBytes);
+
+            Console.WriteLine("Hash of the zipped file: {0}", zipFileHash);
+            Console.WriteLine("decryptedHash: {0}", decryptedHashString);
+
+            if (decryptedHashString.Equals(zipFileHash))
+            {
+                Console.WriteLine("Hash of the zipped file: {0}, decryptedHash {1} ", zipFileHash, decryptedHashString);
+            }
+        }
+
+        private void zipFolderAndSignHash(object sender, EventArgs e)
+        {
+            var folder = @"..\..\fileStore\source\";
+            var uniqueName = Guid.NewGuid().ToString();
+            var targetFileName = @"..\..\fileStore\target\" + uniqueName + ".zip";
+
+            var sourceFileHashes = GetFileHashes(folder);
+
+            ZipFile.CreateFromDirectory(folder, targetFileName);
+
+            var zipFileHash = CalculateFileHash(targetFileName);
+            var originalHashBytes = Encoding.UTF8.GetBytes(zipFileHash);
+
+            var cert = Get_PFX_Certificate();
+            RSACryptoServiceProvider privateKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PrivateKey;
+            RSACryptoServiceProvider publicKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PublicKey.Key;
+
+            // https://msdn.microsoft.com/en-us/library/9tsc5d0z(v=vs.110).aspx  
+            //-----------------------------------------------------
+            byte[] signedHashBytes = null;
+            var halg = new SHA1CryptoServiceProvider();
+
+            string hashBytesSignature = null; 
+            try
+            {
+               //---- sign data using private key    
+                signedHashBytes = privateKeyRSACryptoServiceProvider.SignData(originalHashBytes, halg); 
+                hashBytesSignature = Convert.ToBase64String(signedHashBytes);
+            }
+            catch (CryptographicException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            //--- Other program varify data using public key
+            try
+            {
+               if( publicKeyRSACryptoServiceProvider.VerifyData(originalHashBytes, halg, signedHashBytes))
+                {
+                    Console.WriteLine("The data was verified 1.");
+                }
+                else
+                {
+                    Console.WriteLine("The data does not match the signature.");
+                }
+            } 
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message); 
+            }
+
+            // verify the data from hashBytesSignature (string) 
+            var hashBytesSignature2 = Convert.FromBase64String(hashBytesSignature);  
+            if (publicKeyRSACryptoServiceProvider.VerifyData(originalHashBytes, halg, hashBytesSignature2))
+            {
+                Console.WriteLine("The data was verified 2.");
+            }
+            else
+            {
+                Console.WriteLine("The data does not match the signature.");
+            } 
+        }
+    }
+
+    class FileHash
+    {
+        public string FileName { get; set; }
+        public string Hash { get; set; }
+        public FileHash(string fileName, string hash)
+        {
+            this.FileName = Path.GetFileName(fileName); 
+            this.Hash = hash;
+        }
+         
+        public override bool Equals(object obj)
+        {
+            return this.FileName == ((FileHash) obj).FileName && this.Hash == ((FileHash) obj).Hash;
         }
     }
 }

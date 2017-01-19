@@ -30,6 +30,9 @@
         {
             this.zipStreamButton = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.zipfolder = new System.Windows.Forms.Button();
+            this.zipFolderAndEncryptHash = new System.Windows.Forms.Button();
+            this.zipfoldAndSignHash = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // zipStreamButton
@@ -52,11 +55,44 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.CertificateClicked);
             // 
+            // zipfolder
+            // 
+            this.zipfolder.Location = new System.Drawing.Point(57, 163);
+            this.zipfolder.Name = "zipfolder";
+            this.zipfolder.Size = new System.Drawing.Size(274, 23);
+            this.zipfolder.TabIndex = 2;
+            this.zipfolder.Text = "zip folder ";
+            this.zipfolder.UseVisualStyleBackColor = true;
+            this.zipfolder.Click += new System.EventHandler(this.zipfolder_Click);
+            // 
+            // zipFolderAndEncryptHash
+            // 
+            this.zipFolderAndEncryptHash.Location = new System.Drawing.Point(57, 211);
+            this.zipFolderAndEncryptHash.Name = "zipFolderAndEncryptHash";
+            this.zipFolderAndEncryptHash.Size = new System.Drawing.Size(274, 23);
+            this.zipFolderAndEncryptHash.TabIndex = 3;
+            this.zipFolderAndEncryptHash.Text = "zip folder and encrypt the hash";
+            this.zipFolderAndEncryptHash.UseVisualStyleBackColor = true;
+            this.zipFolderAndEncryptHash.Click += new System.EventHandler(this.zipFolderAndEncryptHash_Click);
+            // 
+            // zipfoldAndSignHash
+            // 
+            this.zipfoldAndSignHash.Location = new System.Drawing.Point(57, 277);
+            this.zipfoldAndSignHash.Name = "zipfoldAndSignHash";
+            this.zipfoldAndSignHash.Size = new System.Drawing.Size(274, 23);
+            this.zipfoldAndSignHash.TabIndex = 4;
+            this.zipfoldAndSignHash.Text = "zip folder and sign the hash";
+            this.zipfoldAndSignHash.UseVisualStyleBackColor = true;
+            this.zipfoldAndSignHash.Click += new System.EventHandler(this.zipFolderAndSignHash);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 437);
+            this.Controls.Add(this.zipfoldAndSignHash);
+            this.Controls.Add(this.zipFolderAndEncryptHash);
+            this.Controls.Add(this.zipfolder);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.zipStreamButton);
             this.Name = "Form1";
@@ -70,6 +106,9 @@
 
         private System.Windows.Forms.Button zipStreamButton;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button zipfolder;
+        private System.Windows.Forms.Button zipFolderAndEncryptHash;
+        private System.Windows.Forms.Button zipfoldAndSignHash;
     }
 }
 
