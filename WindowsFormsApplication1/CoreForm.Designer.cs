@@ -33,6 +33,8 @@
             this.zipfolder = new System.Windows.Forms.Button();
             this.zipFolderAndEncryptHash = new System.Windows.Forms.Button();
             this.zipfoldAndSignHash = new System.Windows.Forms.Button();
+            this.findCertificationFromLocal = new System.Windows.Forms.Button();
+            this.createXMLBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // zipStreamButton
@@ -85,11 +87,33 @@
             this.zipfoldAndSignHash.UseVisualStyleBackColor = true;
             this.zipfoldAndSignHash.Click += new System.EventHandler(this.zipFolderAndSignHash);
             // 
+            // findCertificationFromLocal
+            // 
+            this.findCertificationFromLocal.Location = new System.Drawing.Point(57, 339);
+            this.findCertificationFromLocal.Name = "findCertificationFromLocal";
+            this.findCertificationFromLocal.Size = new System.Drawing.Size(274, 23);
+            this.findCertificationFromLocal.TabIndex = 5;
+            this.findCertificationFromLocal.Text = "find Certificate From Local";
+            this.findCertificationFromLocal.UseVisualStyleBackColor = true;
+            this.findCertificationFromLocal.Click += new System.EventHandler(this.findCertificateFromLocal);
+            // 
+            // createXMLBtn
+            // 
+            this.createXMLBtn.Location = new System.Drawing.Point(388, 49);
+            this.createXMLBtn.Name = "createXMLBtn";
+            this.createXMLBtn.Size = new System.Drawing.Size(302, 23);
+            this.createXMLBtn.TabIndex = 6;
+            this.createXMLBtn.Text = "Create XML file";
+            this.createXMLBtn.UseVisualStyleBackColor = true;
+            this.createXMLBtn.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 437);
+            this.Controls.Add(this.createXMLBtn);
+            this.Controls.Add(this.findCertificationFromLocal);
             this.Controls.Add(this.zipfoldAndSignHash);
             this.Controls.Add(this.zipFolderAndEncryptHash);
             this.Controls.Add(this.zipfolder);
@@ -109,6 +133,8 @@
         private System.Windows.Forms.Button zipfolder;
         private System.Windows.Forms.Button zipFolderAndEncryptHash;
         private System.Windows.Forms.Button zipfoldAndSignHash;
+        private System.Windows.Forms.Button findCertificationFromLocal;
+        private System.Windows.Forms.Button createXMLBtn;
     }
 }
 

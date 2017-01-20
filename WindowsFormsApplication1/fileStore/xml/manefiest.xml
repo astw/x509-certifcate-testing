@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Core>
+  <FileName>d20e329f-23d2-40fa-9b55-4fb002336450.zip</FileName>
+  <CoreHash>b569687322c2a34fc2ce159ae0d99e4a159c050c725afb110399e4be297af9f0</CoreHash>
+  <Manifest>
+    <Files>
+      <File>
+        <Name>Async.And.Performance.pdf</Name>
+        <Type>.pdf</Type>
+        <Hash>666b0df554f42720ca272672c0fc5d16f6f9d5d0c02d38c69431b5eaa3dc7bbf</Hash>
+        <Size>1386848</Size>
+      </File>
+      <File>
+        <Name>File Attachment Storage Estimates.xlsx</Name>
+        <Type>.xlsx</Type>
+        <Hash>b4504fa02970ff65adae432f2091e9074e9bbc4ae03b2b06b1ca84a0b7faf5c7</Hash>
+        <Size>29991</Size>
+      </File>
+    </Files>
+  </Manifest>
+</Core>

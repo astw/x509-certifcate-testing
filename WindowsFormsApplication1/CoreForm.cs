@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Compression;
 using System.Security.Cryptography.X509Certificates;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace WindowsFormsApplication1
 {
@@ -234,15 +237,15 @@ namespace WindowsFormsApplication1
             }
         }
 
-        private List<FileHash> GetFileHashes(string folder)
+        private List<CoreFileElement> GetFileHashes(string folder)
         {
-            var hashes = new List<FileHash>();
+            var hashes = new List<CoreFileElement>();
 
             var files = Directory.GetFiles(folder);  
             hashes = files.Select(fileName =>
             {
-                return new FileHash(fileName, CalculateFileHash(fileName));
-            }).ToList<FileHash>();
+                return new CoreFileElement(fileName, CalculateFileHash(fileName));
+            }).ToList<CoreFileElement>();
 
             return hashes;   
         }
@@ -367,21 +370,110 @@ namespace WindowsFormsApplication1
                 Console.WriteLine("The data does not match the signature.");
             } 
         }
-    }
 
-    class FileHash
-    {
-        public string FileName { get; set; }
-        public string Hash { get; set; }
-        public FileHash(string fileName, string hash)
+        private void findCertificateFromLocal(object sender, EventArgs e)
         {
-            this.FileName = Path.GetFileName(fileName); 
-            this.Hash = hash;
+            var subjectName = "AdventureWorksTestCA"; 
+            X509Certificate2 cert = FindCertificate(subjectName);
+            RSACryptoServiceProvider csp = (RSACryptoServiceProvider) cert.PrivateKey;
+
         }
-         
-        public override bool Equals(object obj)
+
+        private X509Certificate2 FindCertificate(string subject)
         {
-            return this.FileName == ((FileHash) obj).FileName && this.Hash == ((FileHash) obj).Hash;
+            X509Store my = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+
+            my.Open(OpenFlags.ReadOnly);
+
+            RSACryptoServiceProvider csp = null;
+            foreach (X509Certificate2 cert in my.Certificates)
+            {
+                if (cert.Subject.Contains(subject))
+                {
+                    return cert;
+                }
+            }
+
+            return null;
         }
-    }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var folder = @"..\..\fileStore\source\";
+            var outFile = @"..\..\fileStore\xml\manefiest.xml";
+
+            var coreXml = GetFolderXmlNode(folder);
+
+            CreateCoreXml(outFile, coreXml);
+        }   
+
+        private void CreateCoreXml(string targetFile, CoreManifest coreManifest)
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlNode docNode = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
+            doc.AppendChild(docNode);
+
+            XmlNode coreNode = doc.CreateElement("Core");
+            doc.AppendChild(coreNode);
+
+            XmlNode coreFileName = doc.CreateElement("FileName");
+            coreFileName.AppendChild(doc.CreateTextNode(coreManifest.CoreFileName));
+            coreNode.AppendChild(coreFileName);
+
+            XmlNode coreHash = doc.CreateElement("CoreHash");
+            coreHash.AppendChild(doc.CreateTextNode(coreManifest.CoreHash));
+            coreNode.AppendChild(coreHash);
+
+
+            XmlNode manifest = doc.CreateElement("Manifest");
+            coreNode.AppendChild(manifest);
+
+            XmlNode files = doc.CreateElement("Files");
+            manifest.AppendChild(files);
+
+            foreach (var fileInfo in coreManifest.FileNodes)
+            {
+                XmlNode file = doc.CreateElement("File");
+                var fileName = doc.CreateElement("Name");
+                fileName.AppendChild(doc.CreateTextNode(fileInfo.FileName));
+                file.AppendChild(fileName);
+
+                var fileType = doc.CreateElement("Type");
+                fileType.AppendChild(doc.CreateTextNode(fileInfo.FileType));
+                file.AppendChild(fileType);
+
+                var Hash = doc.CreateElement("Hash");
+                Hash.AppendChild(doc.CreateTextNode(fileInfo.Hash));
+                file.AppendChild(Hash);
+
+
+                var size = doc.CreateElement("Size");
+                size.AppendChild(doc.CreateTextNode(fileInfo.Size.ToString()));
+                file.AppendChild(size);
+
+                files.AppendChild(file);
+            }
+
+
+            doc.Save(targetFile);
+        }
+
+        private CoreManifest GetFolderXmlNode(string folder)
+        {
+            var uniqueName = Guid.NewGuid().ToString();
+            var targetFileName = @"..\..\fileStore\target\" + uniqueName + ".zip";
+
+            var fileXmlNodes = GetFileHashes(folder);  
+            ZipFile.CreateFromDirectory(folder, targetFileName);
+
+            var coreHash = CalculateFileHash(targetFileName);
+
+            var coreManifest = new CoreManifest();
+            coreManifest.CoreFileName = Path.GetFileName(targetFileName);
+            coreManifest.CoreHash = coreHash;
+            coreManifest.FileNodes = fileXmlNodes;
+
+            return coreManifest; 
+        }  
+    } 
 }
