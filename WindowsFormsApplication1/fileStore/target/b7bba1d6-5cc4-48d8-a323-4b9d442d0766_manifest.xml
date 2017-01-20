@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Core>
+  <FileName>b7bba1d6-5cc4-48d8-a323-4b9d442d0766.zip</FileName>
+  <CoreHash>b569687322c2a34fc2ce159ae0d99e4a159c050c725afb110399e4be297af9f0</CoreHash>
+  <Signature>0ObOWspUhpkAOZELaYQDqhAy50fE9M1oRrw9LLch+aWLzaY/cK5ZPqrsph7vEKp831s0IgCg3rTY11wKkt53KsvGYf27UuBWwR1egURVg+G/13z0lZig9nGPHYySPzIoUmylMh7sJARJftpKsyQtgCgyMGoZDElT1xbFnNSwonxx9xLspJquYX6ZL5PNAZL4AJX7/GGt7m4T2CI4jp8Yae/zAXC2txrUKgxxxzqHU/lbFhUdPHoNhf292Owf+LiMzE9Mkx2RM4fPKPlcow/UmS6mWl9Bdbkq2dnMIPaCuzXvo3W81FvUb/OlYLSjpNqhDV/Suvji81RwUWpatgn9gQ==</Signature>
+  <Manifest>
+    <Files>
+      <File>
+        <Name>Async.And.Performance.pdf</Name>
+        <Type>.pdf</Type>
+        <Hash>666b0df554f42720ca272672c0fc5d16f6f9d5d0c02d38c69431b5eaa3dc7bbf</Hash>
+        <Size>1386848</Size>
+      </File>
+      <File>
+        <Name>File Attachment Storage Estimates.xlsx</Name>
+        <Type>.xlsx</Type>
+        <Hash>b4504fa02970ff65adae432f2091e9074e9bbc4ae03b2b06b1ca84a0b7faf5c7</Hash>
+        <Size>29991</Size>
+      </File>
+    </Files>
+  </Manifest>
+</Core>

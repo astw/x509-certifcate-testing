@@ -8,5 +8,7 @@ namespace WindowsFormsApplication1
         public string CoreFileName { get; set; }
         public string CoreFileFullName { get; set; }
         public string CoreHash { get; set; }
+        public string ManifestFile { get; set; }
+        public string CoreSignature { get; set; }
     }
 }

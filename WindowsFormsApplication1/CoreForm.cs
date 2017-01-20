@@ -321,6 +321,8 @@ namespace WindowsFormsApplication1
             var zipFileHash = CalculateFileHash(targetFileName);
             var originalHashBytes = Encoding.UTF8.GetBytes(zipFileHash);
 
+            var originalHashStr = Convert.ToBase64String(originalHashBytes);
+
             var cert = Get_PFX_Certificate();
             RSACryptoServiceProvider privateKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PrivateKey;
             RSACryptoServiceProvider publicKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PublicKey.Key;
@@ -360,7 +362,10 @@ namespace WindowsFormsApplication1
             }
 
             // verify the data from hashBytesSignature (string) 
-            var hashBytesSignature2 = Convert.FromBase64String(hashBytesSignature);  
+            var hashBytesSignature2 = Convert.FromBase64String(hashBytesSignature);
+
+            var originalHashStrBytes = Convert.FromBase64String(originalHashStr); 
+
             if (publicKeyRSACryptoServiceProvider.VerifyData(originalHashBytes, halg, hashBytesSignature2))
             {
                 Console.WriteLine("The data was verified 2.");
@@ -474,6 +479,80 @@ namespace WindowsFormsApplication1
             coreManifest.FileNodes = fileXmlNodes;
 
             return coreManifest; 
-        }  
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            TestForm form = new TestForm();
+            form.Show();
+        }
+
+        private void zipFolderAndSignHash2_Click(object sender, EventArgs e)
+        {
+            var folder = @"..\..\fileStore\source\";
+            var uniqueName = Guid.NewGuid().ToString();
+            var targetFileName = @"..\..\fileStore\target\" + uniqueName + ".zip";
+
+            var sourceFileHashes = GetFileHashes(folder);
+
+            ZipFile.CreateFromDirectory(folder, targetFileName);
+
+            var zipFileHash = CalculateFileHash(targetFileName);
+            var originalHashBytes = Encoding.UTF8.GetBytes(zipFileHash);
+
+            var originalHashStr = Convert.ToBase64String(originalHashBytes);
+
+            var cert = Get_PFX_Certificate();
+            RSACryptoServiceProvider privateKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PrivateKey;
+            RSACryptoServiceProvider publicKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PublicKey.Key;
+
+            // https://msdn.microsoft.com/en-us/library/9tsc5d0z(v=vs.110).aspx  
+            //-----------------------------------------------------
+            byte[] signedHashBytes = null;
+            var halg = new SHA1CryptoServiceProvider();
+
+            string hashBytesSignature = null;
+            try
+            {
+                //---- sign data using private key    
+                signedHashBytes = privateKeyRSACryptoServiceProvider.SignData(originalHashBytes, halg);
+                hashBytesSignature = Convert.ToBase64String(signedHashBytes);
+            }
+            catch (CryptographicException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            //--- Other program varify data using public key
+            try
+            {
+                if (publicKeyRSACryptoServiceProvider.VerifyData(originalHashBytes, halg, signedHashBytes))
+                {
+                    Console.WriteLine("The data was verified 1.");
+                }
+                else
+                {
+                    Console.WriteLine("The data does not match the signature.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            // verify the data from hashBytesSignature (string) 
+            var hashBytesSignature2 = Convert.FromBase64String(hashBytesSignature);
+
+            var originalHashStrBytes = Convert.FromBase64String(originalHashStr);
+
+            if (publicKeyRSACryptoServiceProvider.VerifyData(originalHashBytes, halg, hashBytesSignature2))
+            {
+                Console.WriteLine("The data was verified 2.");
+            }
+            else
+            {
+                Console.WriteLine("The data does not match the signature.");
+            }
+        }
     } 
 }

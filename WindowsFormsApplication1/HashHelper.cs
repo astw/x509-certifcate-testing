@@ -16,7 +16,7 @@ namespace WindowsFormsApplication1
         {
             using (var sha256 = new SHA256Managed())
             {
-                var hash = sha256.ComputeHash(data);
+                var hash = sha256.ComputeHash(data); 
                 var hex = ByteArrayToString(hash).ToLowerInvariant();
                 return hex;
             }

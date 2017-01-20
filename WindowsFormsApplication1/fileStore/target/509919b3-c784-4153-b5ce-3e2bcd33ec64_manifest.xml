@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Core>
+  <FileName>509919b3-c784-4153-b5ce-3e2bcd33ec64.zip</FileName>
+  <CoreHash>tWlocyLCo0/CzhWa4NmeShWcBQxyWvsRA5nkvil6+fA=</CoreHash>
+  <Signature>HcX/o1QSsIPckq3kUgZRh3tubLTiS7ZIXRI+m02y6JLy0XLJCaMPI4zpe8wIQcoNkuYnf25I8egYeDiW/GYfv8Mr5OrnU/Ose+SzR5wmKtIZX6+NDA3nu9CVOHU4Q1RDt9pplV7zlQz72OhglSp+1SalqyDvJvmoaRFVQcrCcMYWKbEncRAJGsyil8rTKVNUhWxvwwpeDV/dvTmgloTHj4k3O+ILU2i4pdBOH23fSrf09A/La0EPv5UaiTwRiuD7G+cP9eXqBhSQvDH9mHkmolUVYvMrYkh97ZkCpMTKazOgvhb9zatmfjqRgfQHKu9OxCu/FuTfVDaHKBgUfvXzsA==</Signature>
+  <Manifest>
+    <Files>
+      <File>
+        <Name>Async.And.Performance.pdf</Name>
+        <Type>.pdf</Type>
+        <Hash>ZmsN9VT0JyDKJyZywPxdFvb51dDALTjGlDG16qPce78=</Hash>
+        <Size>1386848</Size>
+      </File>
+      <File>
+        <Name>File Attachment Storage Estimates.xlsx</Name>
+        <Type>.xlsx</Type>
+        <Hash>tFBPoClw/2WtrkMvIJHpB06bvErgOysGscqEoLf69cc=</Hash>
+        <Size>29991</Size>
+      </File>
+    </Files>
+  </Manifest>
+</Core>

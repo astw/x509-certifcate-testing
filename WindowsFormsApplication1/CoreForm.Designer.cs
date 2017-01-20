@@ -35,6 +35,8 @@
             this.zipfoldAndSignHash = new System.Windows.Forms.Button();
             this.findCertificationFromLocal = new System.Windows.Forms.Button();
             this.createXMLBtn = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.zipFolderAndSignHash2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // zipStreamButton
@@ -107,11 +109,33 @@
             this.createXMLBtn.UseVisualStyleBackColor = true;
             this.createXMLBtn.Click += new System.EventHandler(this.button1_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(419, 135);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(231, 76);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // zipFolderAndSignHash2
+            // 
+            this.zipFolderAndSignHash2.Location = new System.Drawing.Point(57, 306);
+            this.zipFolderAndSignHash2.Name = "zipFolderAndSignHash2";
+            this.zipFolderAndSignHash2.Size = new System.Drawing.Size(274, 23);
+            this.zipFolderAndSignHash2.TabIndex = 8;
+            this.zipFolderAndSignHash2.Text = "zip folder and sign the hash(2)";
+            this.zipFolderAndSignHash2.UseVisualStyleBackColor = true;
+            this.zipFolderAndSignHash2.Click += new System.EventHandler(this.zipFolderAndSignHash2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 437);
+            this.Controls.Add(this.zipFolderAndSignHash2);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.createXMLBtn);
             this.Controls.Add(this.findCertificationFromLocal);
             this.Controls.Add(this.zipfoldAndSignHash);
@@ -135,6 +159,8 @@
         private System.Windows.Forms.Button zipfoldAndSignHash;
         private System.Windows.Forms.Button findCertificationFromLocal;
         private System.Windows.Forms.Button createXMLBtn;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button zipFolderAndSignHash2;
     }
 }
 

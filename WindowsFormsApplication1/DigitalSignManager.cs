@@ -35,11 +35,6 @@ namespace WindowsFormsApplication1
             }
         }
 
-        /// <summary>
-        /// Return the data signature, in base64 format
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
         public string GetDataSignature(byte[] data)
         {
             return Convert.ToBase64String(this.SignData(data));
@@ -47,8 +42,8 @@ namespace WindowsFormsApplication1
 
         public string GetDataSignature(string base64Data)
         {
-            var coreDataBytes = Convert.FromBase64String(base64Data);
-            return this.GetDataSignature(coreDataBytes);
+            var dataBytes = Convert.FromBase64String(base64Data);
+            return this.GetDataSignature(dataBytes);
         }
 
         public byte[] SignData(byte[] data)
@@ -62,5 +57,12 @@ namespace WindowsFormsApplication1
             var halg = new SHA1CryptoServiceProvider();
             return this.publicKey.VerifyData(originData, halg, signedData);
         }
+
+        public bool VerifySignature(string originData,  string signedData)
+        {
+            var originDataBytes = Convert.FromBase64String(originData);
+            var signedDataBytes = Convert.FromBase64String(signedData);
+            return VerifySignature(originDataBytes, signedDataBytes);
+        } 
     }
 }
