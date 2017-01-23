@@ -14,6 +14,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using WindowsFormsApplication1.Encryption_Decryption;
 
 namespace WindowsFormsApplication1
 {
@@ -557,6 +558,12 @@ namespace WindowsFormsApplication1
             {
                 Console.WriteLine("The data does not match the signature.");
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            encDecrForm form = new encDecrForm();
+            form.Show();
         }
     } 
 }
