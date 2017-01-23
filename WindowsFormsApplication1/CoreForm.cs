@@ -108,7 +108,7 @@ namespace WindowsFormsApplication1
             else
             {
                 Console.WriteLine("Encryption or decrypt finished successfully -- CER ");
-            }
+            } 
 
         }
 
@@ -347,7 +347,11 @@ namespace WindowsFormsApplication1
             //--- Other program varify data using public key
             try
             {
-               if( publicKeyRSACryptoServiceProvider.VerifyData(originalHashBytes, halg, signedHashBytes))
+
+                var signedHashBytesFromSignatureString = Convert.FromBase64String(hashBytesSignature); 
+
+
+               if ( publicKeyRSACryptoServiceProvider.VerifyData(originalHashBytes, halg, signedHashBytesFromSignatureString))
                 {
                     Console.WriteLine("The data was verified 1.");
                 }

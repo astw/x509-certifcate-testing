@@ -16,9 +16,19 @@ namespace WindowsFormsApplication1
             this.FullFileName = fileName;
             this.FileName = Path.GetFileName(fileName);
             this.Hash = hash;
-            this.FileType = Path.GetExtension(fileName);
+
+            this.FileType = Path.GetExtension(fileName); 
             var fileInfo = new FileInfo(fileName);
-            this.Size = fileInfo.Length;
+            this.Size = fileInfo.Length;  
+        }
+
+        public CoreFileElement(string fileName, string hash, string fileType, long size)
+        {
+            this.FullFileName = fileName;
+            this.FileName = Path.GetFileName(fileName);
+            this.Hash = hash;
+            this.FileType = fileType;
+            this.Size = size; 
         }
 
         public override int GetHashCode()

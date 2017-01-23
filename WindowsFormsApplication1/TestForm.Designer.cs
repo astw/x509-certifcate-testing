@@ -29,23 +29,35 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
+            this.VerifyCoreBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(292, 70);
+            this.button1.Location = new System.Drawing.Point(39, 34);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(179, 51);
             this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
+            this.button1.Text = "Gen Cor";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // VerifyCoreBtn
+            // 
+            this.VerifyCoreBtn.Location = new System.Drawing.Point(39, 155);
+            this.VerifyCoreBtn.Name = "VerifyCoreBtn";
+            this.VerifyCoreBtn.Size = new System.Drawing.Size(179, 51);
+            this.VerifyCoreBtn.TabIndex = 1;
+            this.VerifyCoreBtn.Text = "Verify Core";
+            this.VerifyCoreBtn.UseVisualStyleBackColor = true;
+            this.VerifyCoreBtn.Click += new System.EventHandler(this.VerifyCoreBtn_Click);
             // 
             // TestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(922, 380);
+            this.Controls.Add(this.VerifyCoreBtn);
             this.Controls.Add(this.button1);
             this.Name = "TestForm";
             this.Text = "TestForm";
@@ -56,5 +68,6 @@
         #endregion
 
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button VerifyCoreBtn;
     }
 }
