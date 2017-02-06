@@ -565,5 +565,11 @@ namespace WindowsFormsApplication1
             encDecrForm form = new encDecrForm();
             form.Show();
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ImageReduceForm frm = new ImageReduceForm();
+            frm.Show();
+        }
     } 
 }
