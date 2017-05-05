@@ -27,134 +27,13 @@ namespace WindowsFormsApplication1
             pdflicense.SetLicense(@"C:\work\Aspose\Aspose Licence\Aspose.Pdf.lic");
             pdflicense.Embedded = true;
 
-
             CorPdf();
-            //CorePdf2();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             CorPdf();
         }
-
-        private void TestPdf()
-        {
-
-            Pdf pdf1 = new Pdf();
-            pdf1.PageSetup.PageHeight = PageSize.LetterHeight;
-            Section headSection = pdf1.Sections.Add();
-
-            var pageInfo = headSection.PageInfo;
-            pageInfo.Margin.Top = 5;
-            pageInfo.Margin.Left = 5;
-            pageInfo.Margin.Bottom = 5;
-            pageInfo.Margin.Right = 5;
-
-            headSection.IsLandscape = true;
-
-
-            // text 1 
-            var cityName = "City of Grand Rapids City";
-            Text headText = new Text(headSection, cityName);
-
-            var textInfo = new TextInfo();
-            textInfo.FontSize = 8;
-            textInfo.BackgroundColor = new Aspose.Pdf.Generator.Color("green");
-
-            var cityNameText = new Text(cityName, textInfo);
-
-            cityNameText.Opacity = 0.5f;
-            cityNameText.Margin.Top = 0;
-
-            //headSection.Paragraphs.Add(headText);
-            headSection.Paragraphs.Add(cityNameText);
-
-            // text 2
-            var copyOfRecord = "Copy Of Record";
-
-            var copyOfRecordTextInfo = new TextInfo();
-            copyOfRecordTextInfo.FontSize = 8;
-            copyOfRecordTextInfo.BackgroundColor = new Aspose.Pdf.Generator.Color("red");
-            var copyOfRecordText = new Text(copyOfRecord, copyOfRecordTextInfo);
-
-            copyOfRecordText.Opacity = 0.5f;
-            copyOfRecordText.Margin.Top = 0;
-            copyOfRecordText.Margin.Left = 200;
-
-            headSection.Paragraphs.Add(copyOfRecordText);
-
-
-            //---------------------------------------------
-
-            var t3 = new Text(headSection);
-            var seg1 = new Segment(t3);
-            seg1.Content = "Copy Of Record";
-            seg1.TextInfo.Color = new Aspose.Pdf.Generator.Color("Red");
-            seg1.TextInfo.BackgroundColor = new Aspose.Pdf.Generator.Color("Blue");
-            t3.Segments.Add(seg1);
-
-            Segment seg2 = new Segment(t3);
-            seg2.Content = "paragraph 3";
-            seg2.TextInfo.Color = new Aspose.Pdf.Generator.Color("Green");
-
-            t3.Segments.Add(seg2);
-            headSection.Paragraphs.Add(t3);
-
-            //------------------------------------------------
-            //var textFragment = new TextFragment("Main Text Title");
-            //textFragment.Position = new Position(200, 5);
-            //textFragment.TextState.FontSize = 8;
-            //textFragment.TextState.Font = FontRepository.FindFont("TimesNewRoman");
-            //textFragment.TextState.BackgroundColor = Aspose.Pdf.Color.Aqua;
-            //textFragment.TextState.ForegroundColor = Aspose.Pdf.Color.Beige; 
-
-            //TextBuilder textBuilder = new TextBuilder(pdf1.page);
-
-            var tick = DateTime.Now.Ticks;
-            pdf1.Save($"C:\\work\\temp\\reprot_{tick}.pdf");
-        }
-
-        //private void CorePdf2()
-        //{
-        //    var pdfPage = new Pdf();
-        //    var sec1 = pdfPage.Sections.Add();
-        //    sec1.PageInfo.PageWidth = PageSize.LetterWidth;
-        //    sec1.PageInfo.PageHeight = PageSize.LetterHeight;
-        //    sec1.IsLandscape = true;
-
-        //    sec1.PageInfo.Margin.Top = 30;
-        //    sec1.PageInfo.Margin.Left = 10;
-        //    sec1.PageInfo.Margin.Bottom = 20;
-        //    sec1.PageInfo.Margin.Right = 10;
-
-        //    Aspose.Pdf.Text.TextState headTableBoldTextState = new Aspose.Pdf.Text.TextState("Arial", true, false);
-        //    headTableBoldTextState.FontSize = 6;
-        //    Aspose.Pdf.Text.TextState headTableNormalTextState = new Aspose.Pdf.Text.TextState("Arial", false, false);
-        //    headTableNormalTextState.FontSize = 6;
-
-        //    // header table 
-        //    var headerTable = new Aspose.Pdf.Generator.Table();
-        //    sec1.Paragraphs.Add(headerTable);
-
-        //    var header = new Aspose.Pdf.Generator.HeaderFooterType();
-        //    sec1.InsertHeader(header);
-
-        //    headerTable.ColumnWidths = "33.3% 33.3% 33.3%";
-
-        //    headerTable.Margin.Top = 5f;
-
-        //    var row = headerTable.Rows.Add();
-        //    row.Cells.Add("City Of Grand Rapids");
-        //    row.Cells.Add("Copy Of Record");
-        //    row.Cells.Add("VALLEY CITY PLATING, INC");
-
-
-        //    sec1.Paragraphs.Add(new Text("Page: ($p of $P )"));
-
-        //    var tick = DateTime.Now.Ticks;
-        //    pdfPage.Save($"C:\\work\\temp\\reprot_{tick}.pdf");
-        //}
-
 
         private void CorPdf()
         {
