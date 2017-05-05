@@ -30,7 +30,7 @@ namespace WindowsFormsApplication1
 
             var newImage = new Bitmap(b.Width, b.Height);
 
-            Graphics g = Graphics.FromImage((Image) newImage);
+            Graphics g = Graphics.FromImage((Image)newImage);
 
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Low;
             g.DrawImage(b, 0, 0, b.Width, b.Height);
@@ -61,7 +61,7 @@ namespace WindowsFormsApplication1
                 fileInfo.FileNameWithoutExtension = Path.GetFileNameWithoutExtension(file.FullName);
                 fileInfo.Extension = file.Extension.ToUpper();
                 fileInfo.AbsoluteDirectory = Path.GetDirectoryName(file.FullName);
-                fileInfo.FileSize = (float) (file.Length / 1024);
+                fileInfo.FileSize = (float)(file.Length / 1024);
                 fileInfo.ProcessedFileName = Path.Combine(fileInfo.AbsoluteDirectory, fileInfo.FileNameWithoutExtension + "_processed_" + fileInfo.Extension);
                 fileInfo.ProcessedFileAbsoluteName = Path.GetFileName(fileInfo.ProcessedFileName);
 
@@ -72,7 +72,7 @@ namespace WindowsFormsApplication1
                 fileInfo.Height = b.Height;
 
 
-                Graphics g = Graphics.FromImage((Image) newImage);
+                Graphics g = Graphics.FromImage((Image)newImage);
 
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Low;
                 g.DrawImage(b, 0, 0, b.Width, b.Height);
@@ -88,7 +88,7 @@ namespace WindowsFormsApplication1
                 {
                     format = ImageFormat.Png;
                 }
-                if (fileInfo.Extension == ".TIF")
+                if (fileInfo.Extension == ".TIF" || fileInfo.Extension == ".TIFF")
                 {
                     format = ImageFormat.Tiff;
                 }
@@ -103,8 +103,8 @@ namespace WindowsFormsApplication1
                 /// read processed file size 
                 /// 
                 var pFileInfo = new FileInfo(fileInfo.ProcessedFileName);
-                fileInfo.ProcessedFileSize = (float) (pFileInfo.Length / 1024.00);
-                fileInfo.PercentageSmall = (float) (((fileInfo.FileSize - fileInfo.ProcessedFileSize) / fileInfo.FileSize) * 100.00);
+                fileInfo.ProcessedFileSize = (float)(pFileInfo.Length / 1024.00);
+                fileInfo.PercentageSmall = (float)(((fileInfo.FileSize - fileInfo.ProcessedFileSize) / fileInfo.FileSize) * 100.00);
 
                 imageFileInfoList.Add(fileInfo);
             }
@@ -115,7 +115,10 @@ namespace WindowsFormsApplication1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var imageFileInfoList = ParseFolder(@"C:\Users\swang\Pictures\phone-photo");
+            var folder = @"C:\Users\swang\Pictures\phone-photo";
+            folder = @"C:\Users\swang\Pictures\phone-photo\tifs";
+
+            var imageFileInfoList = ParseFolder(folder);
 
             var or = imageFileInfoList.OrderByDescending(i => i.FileSize).ToList();
 
@@ -123,6 +126,21 @@ namespace WindowsFormsApplication1
             {
                 System.Diagnostics.Debug.WriteLine($"Origin FileName: {item.AbsoluteFileName}, orgin fileSize: {item.FileSize} KB,  processed fileName: {item.ProcessedFileAbsoluteName}, processed fileSize:{item.ProcessedFileSize} KB,    percentage smaller: {item.PercentageSmall} %");
             }
+        }
+
+        private void fileName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ImageReduceForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 
@@ -149,8 +167,4 @@ namespace WindowsFormsApplication1
             get; set;
         }
     }
-
-
-
-
 }
