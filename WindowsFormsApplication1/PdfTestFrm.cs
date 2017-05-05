@@ -55,8 +55,7 @@ namespace WindowsFormsApplication1
             // header table 
             HeaderTable(pdfPage, headTableNormalTextState);
 
-            // footer part  
-
+            // footer part 
             FootTable(pdfPage, headTableNormalTextState);
 
             Aspose.Pdf.Text.TextState reportInfoTableBoldTextState = new Aspose.Pdf.Text.TextState("Arial", true, false);
@@ -82,29 +81,11 @@ namespace WindowsFormsApplication1
             //Attachments 
             AttachmentsTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
 
-            TextBuilder tb = new TextBuilder(pdfPage);
 
-            // TextFragment with sample text 
-            TextFragment fragment = new TextFragment("Test message");
-            // set the font for TextFragment 
-            fragment.TextState.Font = FontRepository.FindFont("Arial");
-            fragment.TextState.FontSize = 8;
-
-            // set the formatting of text as Underline 
-            fragment.TextState.Underline = true;
-            // specify the position where TextFragment needs to be placed 
-            fragment.Position = new Position(5, 5);
-            // append TextFragment to PDF file 
-            tb.AppendText(fragment);
-            var txt = new TextFragment("Page: ($p of $P ) ");
-            tb.AppendText(txt);
 
             // save the PDF file  
             var tick = DateTime.Now.Ticks;
             pdfDocument.Save($"C:\\work\\temp\\reprot_{tick}.pdf");
-
-
-
         }
 
         private static void HeaderTable(Page pdfPage, TextState headTableNormalTextState)
@@ -133,7 +114,6 @@ namespace WindowsFormsApplication1
         {
             Aspose.Pdf.Table footerTable = new Aspose.Pdf.Table();
             pdfPage.Footer = new Aspose.Pdf.HeaderFooter();
-            //pdfPage.Footer.Margin = new Aspose.Pdf.MarginInfo(1.5 * 28.3, 0.1 * 28.3, 1.5 * 28.3, 0.5 * 28.3);
             pdfPage.Footer.Paragraphs.Add(footerTable);
 
             footerTable.ColumnWidths = "33.3% 33.3% 33.3%";
@@ -146,33 +126,13 @@ namespace WindowsFormsApplication1
 
             TextFragment text = new TextFragment("Page: ($p of $P )");
             text.TextState.FontSize = 8;
-            pdfPage.Footer.Paragraphs.Add(text);
-            text.Position.XIndent = 100;    ///;PageSize.LetterWidth * 2 / 3;
 
             var row = footerTable.Rows.Add();
             row.Cells.Add("1st QUART PCR");
-            row.Cells.Add("Page 1 of 2");
+            var cell = row.Cells.Add("");
+            cell.Paragraphs.Add(text);
             row.Cells.Add("APRIL 15 2016 12:15 PM");
 
-
-
-            ////TextBuilder tb = new TextBuilder(pdfDocument.Pages[1]);
-            //TextBuilder tb = new TextBuilder(pdfPage);
-
-            //// TextFragment with sample text 
-            //TextFragment fragment = new TextFragment("Test message");
-            //// set the font for TextFragment 
-            //fragment.TextState.Font = FontRepository.FindFont("Arial");
-            //fragment.TextState.FontSize = 8;
-
-            //// set the formatting of text as Underline 
-            //fragment.TextState.Underline = true;
-            //// specify the position where TextFragment needs to be placed 
-            //fragment.Position = new Position(5, 5);
-            //// append TextFragment to PDF file 
-            //tb.AppendText(fragment);
-            //var txt = new TextFragment("Page: ($p of $P ) ");
-            //tb.AppendText(txt); 
         }
 
         private static void ReportInfoTable(Page pdfPage, TextState reportInfoTableNormalTextState)
