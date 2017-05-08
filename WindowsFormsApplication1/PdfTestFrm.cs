@@ -46,30 +46,14 @@ namespace WindowsFormsApplication1
 
             var page = doc.Pages.Add();
             page.SetPageSize(PageSize.LetterWidth, PageSize.LetterHeight);
-            //            page.PageInfo.IsLandscape = true;
+            //page.PageInfo.IsLandscape = true;
             page.PageInfo.Margin.Top = 5;
             page.PageInfo.Margin.Left = 5;
             page.PageInfo.Margin.Bottom = 5;
             page.PageInfo.Margin.Right = 5;
 
 
-            //Aspose.Pdf.Drawing.Graph graph = new Aspose.Pdf.Drawing.Graph(1, PageSize.LetterHeight - 10);
-            //// Add graph object to paragraphs collection of page instance
-            //page.Paragraphs.Add(graph);
-            //// Create Rectangle instance
-            //Aspose.Pdf.Drawing.Line line = new Aspose.Pdf.Drawing.Line(new float[] { 1, 1, 1, PageSize.LetterHeight });
-            //line.GraphInfo.LineWidth = 0.5f;
-            //// Specify fill color for Graph object
-            ////line.GraphInfo.DashArray = new int[] { 0, 1, 0 };
-            ////line.GraphInfo.DashPhase = 1;
-            //// Add rectangle object to shapes collection of Graph object
-            //graph.Shapes.Add(line); 
-
-            // Create first line object starting from Lower-Left to Top-Right corner of page
             var graph = new Aspose.Pdf.Drawing.Graph((float)page.PageInfo.Width, (float)page.PageInfo.Height);
-            // var line = new Aspose.Pdf.Drawing.Line(new float[] { (float)page.Rect.LLX, 0, (float)page.PageInfo.Width, (float)page.Rect.URY });
-
-            //var line = new Aspose.Pdf.Drawing.Line(new float[] { (float)page.Rect.LLX, 0, (float)page.Rect.LLX, (float)page.Rect.URY }); 
 
             // left line
             var line2 = new Aspose.Pdf.Drawing.Line(new float[] { (float)page.Rect.LLX, 10, (float)page.Rect.LLX, (float)page.Rect.URY });
@@ -79,17 +63,10 @@ namespace WindowsFormsApplication1
 
             // right line 
             var line4 = new Aspose.Pdf.Drawing.Line(new float[] { (float)page.Rect.URX - 10, 10, (float)page.Rect.URX - 10, (float)page.Rect.URY });
-            //  var line4 = new Aspose.Pdf.Drawing.Line(new float[] { (float)page.PageInfo.Width - 10, 0, (float)page.Rect.URX - 10, (float)page.Rect.URY });
 
             // bottom line 
             var line5 = new Aspose.Pdf.Drawing.Line(new float[] { (float)page.Rect.LLX, 10, (float)page.Rect.URX - 10, 10 });
 
-
-            // Draw line from Top-Left corner of page to Bottom-Right corner of page
-            //Aspose.Pdf.Drawing.Line line2 = new Aspose.Pdf.Drawing.Line(new float[] { 0, (float)page.Rect.URY, (float)page.PageInfo.Width, (float)page.Rect.LLX }); 
-            // Aspose.Pdf.Drawing.Line line2 = new Aspose.Pdf.Drawing.Line(new float[] { 0, (float)page.Rect.URY, (float)page.PageInfo.Width, (float)page.Rect.LLX });
-
-            //graph.Shapes.Add((line));
             graph.Shapes.Add((line2));
             graph.Shapes.Add((line3));
             graph.Shapes.Add((line4));
