@@ -27,12 +27,80 @@ namespace WindowsFormsApplication1
             pdflicense.SetLicense(@"C:\work\Aspose\Aspose Licence\Aspose.Pdf.lic");
             pdflicense.Embedded = true;
 
-            CorPdf();
+            //CorPdf(); 
+            LinePdf();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            CorPdf();
+            //CorPdf();
+
+            LinePdf();
+        }
+
+
+        private void LinePdf()
+        {
+            // Create Document instance
+            Document doc = new Document();
+
+            var page = doc.Pages.Add();
+            page.SetPageSize(PageSize.LetterWidth, PageSize.LetterHeight);
+            //            page.PageInfo.IsLandscape = true;
+            page.PageInfo.Margin.Top = 5;
+            page.PageInfo.Margin.Left = 5;
+            page.PageInfo.Margin.Bottom = 5;
+            page.PageInfo.Margin.Right = 5;
+
+
+            //Aspose.Pdf.Drawing.Graph graph = new Aspose.Pdf.Drawing.Graph(1, PageSize.LetterHeight - 10);
+            //// Add graph object to paragraphs collection of page instance
+            //page.Paragraphs.Add(graph);
+            //// Create Rectangle instance
+            //Aspose.Pdf.Drawing.Line line = new Aspose.Pdf.Drawing.Line(new float[] { 1, 1, 1, PageSize.LetterHeight });
+            //line.GraphInfo.LineWidth = 0.5f;
+            //// Specify fill color for Graph object
+            ////line.GraphInfo.DashArray = new int[] { 0, 1, 0 };
+            ////line.GraphInfo.DashPhase = 1;
+            //// Add rectangle object to shapes collection of Graph object
+            //graph.Shapes.Add(line); 
+
+            // Create first line object starting from Lower-Left to Top-Right corner of page
+            var graph = new Aspose.Pdf.Drawing.Graph((float)page.PageInfo.Width, (float)page.PageInfo.Height);
+            // var line = new Aspose.Pdf.Drawing.Line(new float[] { (float)page.Rect.LLX, 0, (float)page.PageInfo.Width, (float)page.Rect.URY });
+
+            //var line = new Aspose.Pdf.Drawing.Line(new float[] { (float)page.Rect.LLX, 0, (float)page.Rect.LLX, (float)page.Rect.URY }); 
+
+            // left line
+            var line2 = new Aspose.Pdf.Drawing.Line(new float[] { (float)page.Rect.LLX, 10, (float)page.Rect.LLX, (float)page.Rect.URY });
+
+            // top line
+            var line3 = new Aspose.Pdf.Drawing.Line(new float[] { (float)page.Rect.LLX, (float)page.Rect.URY, (float)page.PageInfo.Width - 10, (float)page.Rect.URY });
+
+            // right line 
+            var line4 = new Aspose.Pdf.Drawing.Line(new float[] { (float)page.Rect.URX - 10, 10, (float)page.Rect.URX - 10, (float)page.Rect.URY });
+            //  var line4 = new Aspose.Pdf.Drawing.Line(new float[] { (float)page.PageInfo.Width - 10, 0, (float)page.Rect.URX - 10, (float)page.Rect.URY });
+
+            // bottom line 
+            var line5 = new Aspose.Pdf.Drawing.Line(new float[] { (float)page.Rect.LLX, 10, (float)page.Rect.URX - 10, 10 });
+
+
+            // Draw line from Top-Left corner of page to Bottom-Right corner of page
+            //Aspose.Pdf.Drawing.Line line2 = new Aspose.Pdf.Drawing.Line(new float[] { 0, (float)page.Rect.URY, (float)page.PageInfo.Width, (float)page.Rect.LLX }); 
+            // Aspose.Pdf.Drawing.Line line2 = new Aspose.Pdf.Drawing.Line(new float[] { 0, (float)page.Rect.URY, (float)page.PageInfo.Width, (float)page.Rect.LLX });
+
+            //graph.Shapes.Add((line));
+            graph.Shapes.Add((line2));
+            graph.Shapes.Add((line3));
+            graph.Shapes.Add((line4));
+            graph.Shapes.Add((line5));
+
+            page.Paragraphs.Add(graph);
+
+            // save the PDF file  
+            var tick = DateTime.Now.Ticks;
+            doc.Save($"C:\\work\\temp\\reprot_{tick}.pdf");
+
         }
 
         private void CorPdf()
@@ -276,11 +344,11 @@ namespace WindowsFormsApplication1
 
             sampleResultsTable.Border = tableOrder;
             sampleResultsTable.DefaultCellBorder = tableOrder;
-            sampleResultsTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 3, 2, 3);
+            sampleResultsTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(3, 3, 3, 3);
 
             pdfPage.Paragraphs.Add(sampleResultsTable);
 
-            sampleResultsTable.ColumnWidths = "6% 13.6% 8.3% 4.3% 10.3% 10.3% 8.3% 8.3% 8% 5% 9% 7.4%";
+            sampleResultsTable.ColumnWidths = "6% 16.2% 8.3% 5.5% 9% 9% 7.3% 7.8% 8% 5.3% 9% 7.4%";
 
             // Monitoring Point row 
             row = sampleResultsTable.Rows.Add();
@@ -313,7 +381,7 @@ namespace WindowsFormsApplication1
                 row.Cells.Add("January");
                 row.Cells.Add("Arenic");
                 row.Cells.Add("0.92 mg/L");
-                row.Cells.Add(".01");
+                row.Cells.Add("126.012");
                 row.Cells.Add("1/14/2016 8:00 AM");
                 row.Cells.Add("1/15/2016 8:00 AM");
                 row.Cells.Add("Comp");
