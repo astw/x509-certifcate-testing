@@ -263,8 +263,7 @@ namespace WindowsFormsApplication1
 
 
             //TODO
-
-            reportInfoTable.DefaultCellBorder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.All, 0.1F);
+            //reportInfoTable.DefaultCellBorder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.All, 0.1F);
 
 
             reportInfoTable.SetColumnTextState(0, reportInfoTableNormalTextState);
@@ -308,10 +307,6 @@ namespace WindowsFormsApplication1
             var industryNameTable = new Aspose.Pdf.Table();
             innerRow = industryNameTable.Rows.Add();
             industryNameTable.ColumnWidths = "30% 70%";
-
-            //TODO
-            industryNameTable.DefaultCellBorder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.All, 0.1F);
-            reportInfoTableBoldTextState.BackgroundColor = Aspose.Pdf.Color.AliceBlue;
 
             innerRow.Cells.Add("Industy Name:", reportInfoTableBoldTextState);
             innerRow.Cells.Add("Valley City Plating, Inc");
