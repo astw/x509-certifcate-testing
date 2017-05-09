@@ -49,6 +49,7 @@
             this.Controls.Add(this.button1);
             this.Name = "PdfTestFrm";
             this.Text = "PdfTestFrm";
+            this.Load += new System.EventHandler(this.PdfTestFrm_Load);
             this.ResumeLayout(false);
 
         }

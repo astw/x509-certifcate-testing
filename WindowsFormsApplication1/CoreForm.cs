@@ -27,7 +27,7 @@ namespace WindowsFormsApplication1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-           
+
         }
 
         private void CertificateClicked(object sender, EventArgs e)
@@ -59,7 +59,7 @@ namespace WindowsFormsApplication1
             var cert = Get_PFX_Certificate();
             var plainBytes = Encoding.UTF8.GetBytes(plainText);
             var encryptedBytes = Encrypt(plainBytes, cert);
-             
+
         }
 
         private void Test_PFX()
@@ -74,14 +74,15 @@ namespace WindowsFormsApplication1
             var decryptedBytes = Decrypt(encryptedBytes, cert);
             var decryptText = Encoding.UTF8.GetString(decryptedBytes);
 
-            if(plainText.Equals(decryptText) == false)
+            if (plainText.Equals(decryptText) == false)
             {
-               Console.WriteLine("Encryption or decrypt failed -- PFX");
-            } else
+                Console.WriteLine("Encryption or decrypt failed -- PFX");
+            }
+            else
             {
                 Console.WriteLine("Encryption or decrypt finished successfully -- PFX ");
             }
-        } 
+        }
 
         /// <summary>
         /// Here to create import the certificate which only include public key  (CRT) 
@@ -92,13 +93,13 @@ namespace WindowsFormsApplication1
 
             /// Here to create import the certificate which only include public key  (CRT) 
             var cert = Get_CER_Certificate();
-            var plainBytes = Encoding.UTF8.GetBytes(plainText); 
+            var plainBytes = Encoding.UTF8.GetBytes(plainText);
             var encryptedBytes = Encrypt(plainBytes, cert);
 
 
             /// here to load user private key
             var cert2 = Get_Certificate_Private();
-            var decryptedBytes = Decrypt(encryptedBytes, cert2); 
+            var decryptedBytes = Decrypt(encryptedBytes, cert2);
 
             var decryptText = Encoding.UTF8.GetString(decryptedBytes);
 
@@ -109,16 +110,16 @@ namespace WindowsFormsApplication1
             else
             {
                 Console.WriteLine("Encryption or decrypt finished successfully -- CER ");
-            } 
+            }
 
         }
 
         private X509Certificate2 Get_Certificate_Private()
         {
             var certFile = @"C:\work\certificate\openssl\fd\fd-private-exported.pfx";
-            var certPassword = "watertrax"; 
+            var certPassword = "watertrax";
 
-            X509Certificate2 cert = new X509Certificate2(certFile, certPassword); 
+            X509Certificate2 cert = new X509Certificate2(certFile, certPassword);
 
             return cert;
         }
@@ -129,30 +130,30 @@ namespace WindowsFormsApplication1
             var certPassword = "watertrax";
 
             X509Certificate2 cert = new X509Certificate2();
-            cert.Import(certFile); 
+            cert.Import(certFile);
 
             return cert;
         }
-         
+
         private X509Certificate2 Get_PFX_Certificate()
         {
-            var certFile = @"C:\work\certificate\openssl\fd\fd-export-from-import.pfx"; 
+            var certFile = @"C:\work\certificate\openssl\fd\fd-export-from-import.pfx";
             var certPassword = "watertrax";
-            
+
             X509Certificate2 cert = new X509Certificate2(certFile, certPassword);
             return cert;
         }
 
         private byte[] Encrypt(byte[] data, X509Certificate2 cert)
         {
-            RSACryptoServiceProvider publicKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PublicKey.Key;
+            RSACryptoServiceProvider publicKeyRSACryptoServiceProvider = (RSACryptoServiceProvider)cert.PublicKey.Key;
             return publicKeyRSACryptoServiceProvider.Encrypt(data, false);
         }
 
         private byte[] Decrypt(byte[] data, X509Certificate2 cert)
         {
-            RSACryptoServiceProvider privateKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PrivateKey;
-            return privateKeyRSACryptoServiceProvider.Decrypt(data, false); 
+            RSACryptoServiceProvider privateKeyRSACryptoServiceProvider = (RSACryptoServiceProvider)cert.PrivateKey;
+            return privateKeyRSACryptoServiceProvider.Decrypt(data, false);
         }
 
         private void ZipStreamClicked(object sender, EventArgs e)
@@ -168,8 +169,8 @@ namespace WindowsFormsApplication1
 
             using (var sha256 = new SHA256Managed())
             {
-                var freshDigestData = sha256.ComputeHash(strData); 
-                var hashedBase64 = Convert.ToBase64String(freshDigestData); 
+                var freshDigestData = sha256.ComputeHash(strData);
+                var hashedBase64 = Convert.ToBase64String(freshDigestData);
             }
 
             using (FileStream zipToOpen = new FileStream(@"c:\users\exampleuser\release.zip", FileMode.Open))
@@ -192,17 +193,17 @@ namespace WindowsFormsApplication1
             var uniqueName = Guid.NewGuid().ToString();
             var targetFileName = @"..\..\fileStore\target\" + uniqueName + ".zip";
 
-            var sourceFileHashes = GetFileHashes(folder); 
-             
+            var sourceFileHashes = GetFileHashes(folder);
+
             ZipFile.CreateFromDirectory(folder, targetFileName);
 
             ZipFile.ExtractToDirectory(targetFileName, @"..\..\fileStore\target\" + uniqueName);
 
             var targetFileHashes = GetFileHashes(@"..\..\fileStore\target\" + uniqueName);
 
-            for(int i=0; i< sourceFileHashes.Count; i++)
+            for (int i = 0; i < sourceFileHashes.Count; i++)
             {
-                var sfh = sourceFileHashes[i]; 
+                var sfh = sourceFileHashes[i];
                 var tfs = targetFileHashes[i];
                 if (sfh.Equals(tfs))
                 {
@@ -242,18 +243,18 @@ namespace WindowsFormsApplication1
         {
             var hashes = new List<CoreFileElement>();
 
-            var files = Directory.GetFiles(folder);  
+            var files = Directory.GetFiles(folder);
             hashes = files.Select(fileName =>
             {
                 return new CoreFileElement(fileName, CalculateFileHash(fileName));
             }).ToList<CoreFileElement>();
 
-            return hashes;   
+            return hashes;
         }
 
 
         private string CalculateFileHash(string fileName)
-        { 
+        {
             var data = File.ReadAllBytes(fileName);
             return ComputeHash(data);
         }
@@ -286,17 +287,17 @@ namespace WindowsFormsApplication1
             ZipFile.CreateFromDirectory(folder, targetFileName);
 
             var zipFileHash = CalculateFileHash(targetFileName);
-            var hashBytes = Encoding.UTF8.GetBytes(zipFileHash); 
+            var hashBytes = Encoding.UTF8.GetBytes(zipFileHash);
 
             var cert = Get_PFX_Certificate();
-            RSACryptoServiceProvider privateKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PrivateKey;
-            RSACryptoServiceProvider publicKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PublicKey.Key;
+            RSACryptoServiceProvider privateKeyRSACryptoServiceProvider = (RSACryptoServiceProvider)cert.PrivateKey;
+            RSACryptoServiceProvider publicKeyRSACryptoServiceProvider = (RSACryptoServiceProvider)cert.PublicKey.Key;
 
             //Other program is using public key to encrypt 
             var encryptedHashBytes = publicKeyRSACryptoServiceProvider.Encrypt(hashBytes, false);
 
             //This program is using private key to decrypt   
-            var decryptedHashBytes = privateKeyRSACryptoServiceProvider.Decrypt(encryptedHashBytes, false); 
+            var decryptedHashBytes = privateKeyRSACryptoServiceProvider.Decrypt(encryptedHashBytes, false);
 
             var decryptedHashString = Encoding.UTF8.GetString(decryptedHashBytes);
 
@@ -325,19 +326,19 @@ namespace WindowsFormsApplication1
             var originalHashStr = Convert.ToBase64String(originalHashBytes);
 
             var cert = Get_PFX_Certificate();
-            RSACryptoServiceProvider privateKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PrivateKey;
-            RSACryptoServiceProvider publicKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PublicKey.Key;
+            RSACryptoServiceProvider privateKeyRSACryptoServiceProvider = (RSACryptoServiceProvider)cert.PrivateKey;
+            RSACryptoServiceProvider publicKeyRSACryptoServiceProvider = (RSACryptoServiceProvider)cert.PublicKey.Key;
 
             // https://msdn.microsoft.com/en-us/library/9tsc5d0z(v=vs.110).aspx  
             //-----------------------------------------------------
             byte[] signedHashBytes = null;
             var halg = new SHA1CryptoServiceProvider();
 
-            string hashBytesSignature = null; 
+            string hashBytesSignature = null;
             try
             {
-               //---- sign data using private key    
-                signedHashBytes = privateKeyRSACryptoServiceProvider.SignData(originalHashBytes, halg); 
+                //---- sign data using private key    
+                signedHashBytes = privateKeyRSACryptoServiceProvider.SignData(originalHashBytes, halg);
                 hashBytesSignature = Convert.ToBase64String(signedHashBytes);
             }
             catch (CryptographicException ex)
@@ -349,10 +350,10 @@ namespace WindowsFormsApplication1
             try
             {
 
-                var signedHashBytesFromSignatureString = Convert.FromBase64String(hashBytesSignature); 
+                var signedHashBytesFromSignatureString = Convert.FromBase64String(hashBytesSignature);
 
 
-               if ( publicKeyRSACryptoServiceProvider.VerifyData(originalHashBytes, halg, signedHashBytesFromSignatureString))
+                if (publicKeyRSACryptoServiceProvider.VerifyData(originalHashBytes, halg, signedHashBytesFromSignatureString))
                 {
                     Console.WriteLine("The data was verified 1.");
                 }
@@ -360,16 +361,16 @@ namespace WindowsFormsApplication1
                 {
                     Console.WriteLine("The data does not match the signature.");
                 }
-            } 
-            catch(Exception ex)
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine(ex.Message); 
+                Console.WriteLine(ex.Message);
             }
 
             // verify the data from hashBytesSignature (string) 
             var hashBytesSignature2 = Convert.FromBase64String(hashBytesSignature);
 
-            var originalHashStrBytes = Convert.FromBase64String(originalHashStr); 
+            var originalHashStrBytes = Convert.FromBase64String(originalHashStr);
 
             if (publicKeyRSACryptoServiceProvider.VerifyData(originalHashBytes, halg, hashBytesSignature2))
             {
@@ -378,14 +379,14 @@ namespace WindowsFormsApplication1
             else
             {
                 Console.WriteLine("The data does not match the signature.");
-            } 
+            }
         }
 
         private void findCertificateFromLocal(object sender, EventArgs e)
         {
-            var subjectName = "AdventureWorksTestCA"; 
+            var subjectName = "AdventureWorksTestCA";
             X509Certificate2 cert = FindCertificate(subjectName);
-            RSACryptoServiceProvider csp = (RSACryptoServiceProvider) cert.PrivateKey;
+            RSACryptoServiceProvider csp = (RSACryptoServiceProvider)cert.PrivateKey;
 
         }
 
@@ -415,7 +416,7 @@ namespace WindowsFormsApplication1
             var coreXml = GetFolderXmlNode(folder);
 
             CreateCoreXml(outFile, coreXml);
-        }   
+        }
 
         private void CreateCoreXml(string targetFile, CoreManifest coreManifest)
         {
@@ -473,7 +474,7 @@ namespace WindowsFormsApplication1
             var uniqueName = Guid.NewGuid().ToString();
             var targetFileName = @"..\..\fileStore\target\" + uniqueName + ".zip";
 
-            var fileXmlNodes = GetFileHashes(folder);  
+            var fileXmlNodes = GetFileHashes(folder);
             ZipFile.CreateFromDirectory(folder, targetFileName);
 
             var coreHash = CalculateFileHash(targetFileName);
@@ -483,7 +484,7 @@ namespace WindowsFormsApplication1
             coreManifest.CoreHash = coreHash;
             coreManifest.FileNodes = fileXmlNodes;
 
-            return coreManifest; 
+            return coreManifest;
         }
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -508,8 +509,8 @@ namespace WindowsFormsApplication1
             var originalHashStr = Convert.ToBase64String(originalHashBytes);
 
             var cert = Get_PFX_Certificate();
-            RSACryptoServiceProvider privateKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PrivateKey;
-            RSACryptoServiceProvider publicKeyRSACryptoServiceProvider = (RSACryptoServiceProvider) cert.PublicKey.Key;
+            RSACryptoServiceProvider privateKeyRSACryptoServiceProvider = (RSACryptoServiceProvider)cert.PrivateKey;
+            RSACryptoServiceProvider publicKeyRSACryptoServiceProvider = (RSACryptoServiceProvider)cert.PublicKey.Key;
 
             // https://msdn.microsoft.com/en-us/library/9tsc5d0z(v=vs.110).aspx  
             //-----------------------------------------------------
@@ -571,5 +572,5 @@ namespace WindowsFormsApplication1
             ImageReduceForm frm = new ImageReduceForm();
             frm.Show();
         }
-    } 
+    }
 }
