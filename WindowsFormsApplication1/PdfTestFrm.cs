@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Aspose.Pdf;
-using Aspose.Pdf.Generator;
-using Aspose.Pdf.InteractiveFeatures.Annotations;
 using Aspose.Pdf.Text;
-using Cell = Aspose.Pdf.Cell;
-using Color = System.Drawing.Color;
+using HorizontalAlignment = Aspose.Pdf.HorizontalAlignment;
+using MarginInfo = Aspose.Pdf.MarginInfo;
 using PageSize = Aspose.Pdf.Generator.PageSize;
 using Row = Aspose.Pdf.Row;
 
@@ -60,13 +52,13 @@ namespace WindowsFormsApplication1
             tab1.DefaultCellBorder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.All);
 
             //Add a row into the table
-            Aspose.Pdf.Row row1 = tab1.Rows.Add();
+            Aspose.Pdf.Row row = tab1.Rows.Add();
 
             //Add 1st cell in the row
-            row1.Cells.Add("left cell");
+            row.Cells.Add("left cell");
 
             //Add 2nd cell in the row
-            Aspose.Pdf.Cell cell2 = row1.Cells.Add();
+            Aspose.Pdf.Cell cell2 = row.Cells.Add();
 
             //Create a table to be nested with the reference of 2nd cell in the row
             Aspose.Pdf.Table tab2 = new Aspose.Pdf.Table();
@@ -160,11 +152,8 @@ namespace WindowsFormsApplication1
             Aspose.Pdf.Text.TextState headTableNormalTextState = new Aspose.Pdf.Text.TextState("Arial", false, false);
             headTableNormalTextState.FontSize = 6;
 
-            // header table 
+            // header and footer
             HeaderTable(pdfPage);
-
-            // footer part 
-            FootTable(pdfPage, headTableNormalTextState);
 
             Aspose.Pdf.Text.TextState reportInfoTableBoldTextState = new Aspose.Pdf.Text.TextState("Arial", true, false);
             reportInfoTableBoldTextState.FontSize = 12;
@@ -172,7 +161,7 @@ namespace WindowsFormsApplication1
             reportInfoTableNormalTextState.FontSize = 10;
 
             // report info part  
-            ReportInfoTableNotNestedTable(pdfPage, reportInfoTableNormalTextState, reportInfoTableBoldTextState);
+            ReportInfoTable_Watertrax(pdfPage, reportInfoTableNormalTextState, reportInfoTableBoldTextState);
 
             //Samples and Results text   
             SampleAndResult(pdfPage, reportInfoTableBoldTextState);
@@ -199,26 +188,72 @@ namespace WindowsFormsApplication1
             Aspose.Pdf.Table headerTable = new Aspose.Pdf.Table();
 
             pdfPage.Header = new Aspose.Pdf.HeaderFooter();
+            var headerMargin = new MarginInfo(10, 20, 10, 5);
+            pdfPage.Header.Margin = headerMargin;
+
             pdfPage.Header.Paragraphs.Add(headerTable);
             //page1.Paragraphs.Add(headerTable);
 
-            Aspose.Pdf.Text.TextState headTableNormalTextState = new Aspose.Pdf.Text.TextState("Arial", false, false);
-            headTableNormalTextState.FontSize = 6;
-            headTableNormalTextState.FontStyle = FontStyles.Bold;
-            headTableNormalTextState.ForegroundColor = Aspose.Pdf.Color.Gray;
+            //var tableOrder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.Top | Aspose.Pdf.BorderSide.Bottom, 1F);
+            //headerTable.Border = tableOrder;
+            //headerTable.DefaultCellBorder = tableOrder;
+
+            Aspose.Pdf.Text.TextState leftHeader = new Aspose.Pdf.Text.TextState("Arial", false, false);
+            leftHeader.FontSize = 6;
+            leftHeader.FontStyle = FontStyles.Bold;
+            leftHeader.ForegroundColor = Aspose.Pdf.Color.Gray;
+            leftHeader.HorizontalAlignment = HorizontalAlignment.Left;
+
+            Aspose.Pdf.Text.TextState centerHeader = new Aspose.Pdf.Text.TextState("Arial", false, false);
+            centerHeader.FontSize = 6;
+            centerHeader.FontStyle = FontStyles.Bold;
+            centerHeader.ForegroundColor = Aspose.Pdf.Color.Gray;
+            centerHeader.HorizontalAlignment = HorizontalAlignment.Center;
+
+            Aspose.Pdf.Text.TextState rightHeader = new Aspose.Pdf.Text.TextState("Arial", false, false);
+            rightHeader.FontSize = 6;
+            rightHeader.FontStyle = FontStyles.Bold;
+            rightHeader.ForegroundColor = Aspose.Pdf.Color.Gray;
+            rightHeader.HorizontalAlignment = HorizontalAlignment.Right;
 
             headerTable.ColumnWidths = "33.3% 33.3% 33.3%";
             headerTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 3, 2, 3);
             headerTable.Broken = Aspose.Pdf.TableBroken.None;
             headerTable.Margin.Top = 5f;
-            headerTable.SetColumnTextState(0, headTableNormalTextState);
-            headerTable.SetColumnTextState(1, headTableNormalTextState);
-            headerTable.SetColumnTextState(2, headTableNormalTextState);
+
+            headerTable.SetColumnTextState(0, leftHeader);
+            headerTable.SetColumnTextState(1, centerHeader);
+            headerTable.SetColumnTextState(2, rightHeader);
 
             Row row = headerTable.Rows.Add();
             row.Cells.Add("City Of Grand Rapids");
             row.Cells.Add("Copy Of Record");
             row.Cells.Add("VALLEY CITY PLATING, INC");
+
+
+            // Footer 
+            Aspose.Pdf.Table footerTable = new Aspose.Pdf.Table();
+            pdfPage.Footer = new Aspose.Pdf.HeaderFooter();
+            pdfPage.Footer.Margin.Left = headerMargin.Left;
+            pdfPage.Footer.Margin.Right = headerMargin.Right;
+            pdfPage.Footer.Paragraphs.Add(footerTable);
+
+            footerTable.ColumnWidths = "33.3% 33.3% 33.3%";
+            footerTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 3, 2, 3);
+            footerTable.Broken = Aspose.Pdf.TableBroken.None;
+            footerTable.Margin.Bottom = -5f;
+            footerTable.SetColumnTextState(0, leftHeader);
+            footerTable.SetColumnTextState(1, centerHeader);
+            footerTable.SetColumnTextState(2, rightHeader);
+
+            TextFragment text = new TextFragment("Page: ($p of $P )");
+            text.TextState.FontSize = 8;
+
+            row = footerTable.Rows.Add();
+            row.Cells.Add("1st QUART PCR");
+            var cell = row.Cells.Add("");
+            cell.Paragraphs.Add(text);
+            row.Cells.Add("APRIL 15 2016 12:15 PM");
         }
 
         private static void FootTable(Page pdfPage, TextState headTableNormalTextState)
@@ -226,6 +261,8 @@ namespace WindowsFormsApplication1
             Aspose.Pdf.Table footerTable = new Aspose.Pdf.Table();
             pdfPage.Footer = new Aspose.Pdf.HeaderFooter();
             pdfPage.Footer.Paragraphs.Add(footerTable);
+
+            headTableNormalTextState.ForegroundColor = Aspose.Pdf.Color.Gray;
 
             footerTable.ColumnWidths = "33.3% 33.3% 33.3%";
             footerTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 3, 2, 3);
@@ -245,6 +282,75 @@ namespace WindowsFormsApplication1
             row.Cells.Add("APRIL 15 2016 12:15 PM");
         }
 
+
+        private static void ReportInfoTable_Watertrax(Page pdfPage, TextState reportInfoTableNormalTextState, TextState reportInfoTableBoldTextState)
+        {
+            var reportInfoTable = new Aspose.Pdf.Table();
+
+            //var tableOrder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.Top | Aspose.Pdf.BorderSide.Bottom, 1F);
+            //reportInfoTable.Border = tableOrder;
+            //reportInfoTable.DefaultCellBorder = tableOrder;
+            reportInfoTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(3, 3, 3, 3);
+
+            reportInfoTable.Margin.Top = 20f;
+
+            pdfPage.Paragraphs.Add(reportInfoTable);
+            reportInfoTable.ColumnWidths = "15% 30% 10% 15% 30%";
+            //reportInfoTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 3, 2, 3);
+
+            //TODO
+            //reportInfoTable.DefaultCellBorder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.All, 0.1F);  
+            reportInfoTable.SetColumnTextState(0, reportInfoTableBoldTextState);
+            reportInfoTable.SetColumnTextState(1, reportInfoTableNormalTextState);
+            reportInfoTable.SetColumnTextState(2, reportInfoTableNormalTextState);
+            reportInfoTable.SetColumnTextState(3, reportInfoTableBoldTextState);
+            reportInfoTable.SetColumnTextState(4, reportInfoTableNormalTextState);
+
+            //--------------------------------Row 1 
+            var row = reportInfoTable.Rows.Add();
+            row.Cells.Add("Report:");
+            row.Cells.Add("January 1, 2015 - March 31, 2016");
+
+            row.Cells.Add("");
+            row.Cells.Add("Period:");
+            row.Cells.Add("January 1, 2015 - March 31, 2016");
+
+            //--------------------------------Row 2
+            // empty row
+            row = reportInfoTable.Rows.Add();
+            row.MinRowHeight = 30;
+
+            //--------------------------------Row 3
+            row = reportInfoTable.Rows.Add();
+            row.Cells.Add("Industy Name:", reportInfoTableBoldTextState);
+            row.Cells.Add("Valley City Plating, Inc:");
+
+            row.Cells.Add("");
+
+            row.Cells.Add("Submitted Date:", reportInfoTableBoldTextState);
+            row.Cells.Add("April 15, 2015 12:15 PM");
+
+            //--------------------------------Row 4
+            row = reportInfoTable.Rows.Add();
+            row.Cells.Add("Industy Number:");
+            row.Cells.Add("40");
+
+            row.Cells.Add("");
+
+            row.Cells.Add("Submitted By:");
+            row.Cells.Add("Divid Pelletier");
+            //--------------------------------Row 5
+            row = reportInfoTable.Rows.Add();
+            row.Cells.Add("Address:");
+            row.Cells.Add("3353 N.W. 51 Street \n\r Grand Rapids, MI 02334");
+
+            row.Cells.Add("");
+
+            row.Cells.Add("Title:");
+            row.Cells.Add("Enrionment Compliance Manager");
+        }
+
+
         private static void ReportInfoTable(Page pdfPage, TextState reportInfoTableNormalTextState, TextState reportInfoTableBoldTextState)
         {
             var reportInfoTable = new Aspose.Pdf.Table();
@@ -260,20 +366,18 @@ namespace WindowsFormsApplication1
 
             pdfPage.Paragraphs.Add(reportInfoTable);
             reportInfoTable.ColumnWidths = "40% 20% 40%";
-            reportInfoTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 3, 2, 3);
-            reportInfoTable.Broken = Aspose.Pdf.TableBroken.None;
+            //reportInfoTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 3, 2, 3);
 
 
             //TODO
             //reportInfoTable.DefaultCellBorder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.All, 0.1F); 
 
-            reportInfoTable.SetColumnTextState(0, reportInfoTableNormalTextState);
-            reportInfoTable.SetColumnTextState(1, reportInfoTableNormalTextState);
-            reportInfoTable.SetColumnTextState(2, reportInfoTableNormalTextState);
+            //reportInfoTable.SetColumnTextState(0, reportInfoTableNormalTextState);
+            //reportInfoTable.SetColumnTextState(1, reportInfoTableNormalTextState);
+            //reportInfoTable.SetColumnTextState(2, reportInfoTableNormalTextState);
 
 
             //--------------------------------Row 1 
-
             var row = reportInfoTable.Rows.Add();
             //var cell = row.Cells.Add("Report: 1st Quarter PCR");
             var cell = row.Cells.Add("");
@@ -281,7 +385,7 @@ namespace WindowsFormsApplication1
             var innerRow = reportNameInnerTable.Rows.Add();
             reportNameInnerTable.ColumnWidths = "15% 85%";
             innerRow.Cells.Add("Report:", reportInfoTableBoldTextState);
-            innerRow.Cells.Add("1st Quarter PCR");
+            innerRow.Cells.Add("January 1, 2015 - March 31, 2016");
             cell.Paragraphs.Add(reportNameInnerTable);
 
 
@@ -290,13 +394,14 @@ namespace WindowsFormsApplication1
             cell = row.Cells.Add();
 
             // nested table 
-            var innerTable = new Aspose.Pdf.Table();
-            innerRow = innerTable.Rows.Add();
-            innerTable.ColumnWidths = "15% 85%";
-            innerRow.Cells.Add("Period:", reportInfoTableBoldTextState);
-            innerRow.Cells.Add("January 1, 2015 - March 31, 2016");
+            //var innerTable = new Aspose.Pdf.Table();
+            //innerRow = innerTable.Rows.Add();
+            //innerTable.ColumnWidths = "15% 85%";
+            //innerRow.Cells.Add("Period:", reportInfoTableBoldTextState);
+            //innerRow.Cells.Add("January 1, 2015 - March 31, 2016");
+            //cell.Paragraphs.Add(innerTable);
 
-            cell.Paragraphs.Add(innerTable);
+            cell.Paragraphs.Add(reportNameInnerTable);
 
             //--------------------------------Row 2
             // empty row
@@ -398,8 +503,6 @@ namespace WindowsFormsApplication1
 
             //TODO
             //reportInfoTable.DefaultCellBorder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.All, 0.1F);
-
-
             reportInfoTable.SetColumnTextState(0, reportInfoTableNormalTextState);
             reportInfoTable.SetColumnTextState(1, reportInfoTableNormalTextState);
             reportInfoTable.SetColumnTextState(2, reportInfoTableNormalTextState);
@@ -499,14 +602,30 @@ namespace WindowsFormsApplication1
             cell = row.Cells.Add("These files are also part of the Copy Of Records.", reportInfoTableNormalTextState);
             cell.ColSpan = 3;
 
-            row = attachmentsTable.Rows.Add();
-            row.Cells.Add("Original File Name", reportInfoTableBoldTextState);
-            row.Cells.Add("System Generated Unqiue File Name", reportInfoTableBoldTextState);
-            row.Cells.Add("Attachment Type", reportInfoTableBoldTextState);
+            //Attachment files list table
+            var tableOrder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.All, 0.1F);
+            var attachmentFilesTable = new Aspose.Pdf.Table
+            {
+                Border = tableOrder,
+                DefaultCellBorder = tableOrder,
+                DefaultCellPadding = new Aspose.Pdf.MarginInfo(3, 3, 3, 3)
+            };
+            attachmentFilesTable.Margin.Top = 10;
+
+            attachmentFilesTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(3, 3, 3, 3);
+            pdfPage.Paragraphs.Add(attachmentFilesTable);
+
+            attachmentFilesTable.ColumnWidths = "33% 33% 33%";
+            row = attachmentFilesTable.Rows.Add();
+            row.BackgroundColor = Aspose.Pdf.Color.LightGray;
+
+            row.Cells.Add("Original File Name");
+            row.Cells.Add("System Generated Unqiue File Name");
+            row.Cells.Add("Attachment Type");
 
             for (int i = 1; i < 5; i++)
             {
-                row = attachmentsTable.Rows.Add();
+                row = attachmentFilesTable.Rows.Add();
                 row.Cells.Add("Lab Analysis Report.pdf");
                 row.Cells.Add("Lab Analysis Report1.pdf");
                 row.Cells.Add("Lab Analysis Report");
@@ -576,11 +695,12 @@ namespace WindowsFormsApplication1
             var tableOrder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.All, 0.1F);
 
             //Samples and Results table  
-            var sampleResultsTable = new Aspose.Pdf.Table();
-
-            sampleResultsTable.Border = tableOrder;
-            sampleResultsTable.DefaultCellBorder = tableOrder;
-            sampleResultsTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(3, 3, 3, 3);
+            var sampleResultsTable = new Aspose.Pdf.Table
+            {
+                Border = tableOrder,
+                DefaultCellBorder = tableOrder,
+                DefaultCellPadding = new Aspose.Pdf.MarginInfo(3, 3, 3, 3)
+            };
 
             pdfPage.Paragraphs.Add(sampleResultsTable);
 
@@ -590,9 +710,8 @@ namespace WindowsFormsApplication1
             row = sampleResultsTable.Rows.Add();
             row.BackgroundColor = Aspose.Pdf.Color.LightGray;
             row.Border = tableOrder;
-            row.Cells.Add("");
             var cell = row.Cells.Add("Monitoring Point:40");
-            cell.ColSpan = 11;
+            cell.ColSpan = 12;
 
             row = sampleResultsTable.Rows.Add();
             row.BackgroundColor = Aspose.Pdf.Color.LightGray;
@@ -605,13 +724,13 @@ namespace WindowsFormsApplication1
             row.Cells.Add("Sample End");
             row.Cells.Add("Collection Method");
             row.Cells.Add("Lab Sample ID");
-            row.Cells.Add("Analyss Method");
+            row.Cells.Add("Analys Method");
             row.Cells.Add("EPA Method");
-            row.Cells.Add("Analyss Date");
+            row.Cells.Add("Analys Date");
             row.Cells.Add("Flow");
 
             //// Simulate data
-            for (int i = 1; i < 50; i++)
+            for (int i = 1; i < 60; i++)
             {
                 row = sampleResultsTable.Rows.Add();
                 row.Cells.Add("January");
