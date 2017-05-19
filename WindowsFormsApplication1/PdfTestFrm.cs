@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Aspose.Pdf;
 using Aspose.Pdf.Text;
@@ -19,16 +20,15 @@ namespace WindowsFormsApplication1
             pdflicense.SetLicense(@"C:\work\Aspose\Aspose Licence\Aspose.Pdf.lic");
             pdflicense.Embedded = true;
 
-            NestedTable();
+            //     NestedTable();
             CorPdf();
-            LinePdf();
+            //    LinePdf();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             CorPdf();
-
-            LinePdf();
+            //LinePdf();
         }
 
 
@@ -88,8 +88,22 @@ namespace WindowsFormsApplication1
             row22.Cells.Add("right bottom cell");
 
 
+
             var tick = DateTime.Now.Ticks;
+
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+
             pdf.Save($"C:\\work\\temp\\reprot_nested_{tick}.pdf");
+
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+
+            MessageBox.Show(elapsedTime);
 
         }
 
@@ -180,7 +194,20 @@ namespace WindowsFormsApplication1
 
             // save the PDF file  
             var tick = DateTime.Now.Ticks;
+
+
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+
             pdfDocument.Save($"C:\\work\\temp\\reprot_{tick}.pdf");
+
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+
+            MessageBox.Show(elapsedTime);
+
         }
 
         private static void HeaderTable(Page pdfPage)

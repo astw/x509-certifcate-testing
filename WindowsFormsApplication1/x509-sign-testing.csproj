@@ -92,6 +92,12 @@
     <Compile Include="TestSignForm.Designer.cs">
       <DependentUpon>TestSignForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="XmlSortFrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="XmlSortFrm.Designer.cs">
+      <DependentUpon>XmlSortFrm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CoreForm.resx">
       <DependentUpon>CoreForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -115,6 +121,9 @@
     </Compile>
     <EmbeddedResource Include="TestSignForm.resx">
       <DependentUpon>TestSignForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XmlSortFrm.resx">
+      <DependentUpon>XmlSortFrm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="certificate\fd-export-from-import.pfx" />
     <None Include="certificate\fd-private-and-public.pem" />
