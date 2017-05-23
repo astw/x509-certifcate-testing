@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using Aspose.Pdf;
+using Aspose.Pdf.InteractiveFeatures;
+using Aspose.Pdf.InteractiveFeatures.Annotations;
 using Aspose.Pdf.Text;
 using HorizontalAlignment = Aspose.Pdf.HorizontalAlignment;
 using MarginInfo = Aspose.Pdf.MarginInfo;
@@ -103,8 +105,6 @@ namespace WindowsFormsApplication1
             ts.Hours, ts.Minutes, ts.Seconds,
             ts.Milliseconds / 10);
 
-            MessageBox.Show(elapsedTime);
-
         }
 
         private void LinePdf()
@@ -154,43 +154,45 @@ namespace WindowsFormsApplication1
 
             var pdfPage = pdfDocument.Pages.Add();
 
-            pdfPage.SetPageSize(PageSize.LetterWidth, PageSize.LetterHeight);
-            pdfPage.PageInfo.IsLandscape = true;
-            pdfPage.PageInfo.Margin.Top = 30;
-            pdfPage.PageInfo.Margin.Left = 10;
-            pdfPage.PageInfo.Margin.Bottom = 20;
-            pdfPage.PageInfo.Margin.Right = 10;
+            //pdfPage.SetPageSize(PageSize.LetterWidth, PageSize.LetterHeight);
+            //pdfPage.PageInfo.IsLandscape = true;
+            //pdfPage.PageInfo.Margin.Top = 30;
+            //pdfPage.PageInfo.Margin.Left = 10;
+            //pdfPage.PageInfo.Margin.Bottom = 20;
+            //pdfPage.PageInfo.Margin.Right = 10;
 
-            Aspose.Pdf.Text.TextState headTableBoldTextState = new Aspose.Pdf.Text.TextState("Arial", true, false);
-            headTableBoldTextState.FontSize = 6;
-            Aspose.Pdf.Text.TextState headTableNormalTextState = new Aspose.Pdf.Text.TextState("Arial", false, false);
-            headTableNormalTextState.FontSize = 6;
+            //Aspose.Pdf.Text.TextState headTableBoldTextState = new Aspose.Pdf.Text.TextState("Arial", true, false);
+            //headTableBoldTextState.FontSize = 6;
+            //Aspose.Pdf.Text.TextState headTableNormalTextState = new Aspose.Pdf.Text.TextState("Arial", false, false);
+            //headTableNormalTextState.FontSize = 6;
 
-            // header and footer
-            HeaderTable(pdfPage);
+            //// header and footer
+            //HeaderTable(pdfPage);
 
-            Aspose.Pdf.Text.TextState reportInfoTableBoldTextState = new Aspose.Pdf.Text.TextState("Arial", true, false);
-            reportInfoTableBoldTextState.FontSize = 12;
-            Aspose.Pdf.Text.TextState reportInfoTableNormalTextState = new Aspose.Pdf.Text.TextState("Arial", false, false);
-            reportInfoTableNormalTextState.FontSize = 10;
+            //Aspose.Pdf.Text.TextState reportInfoTableBoldTextState = new Aspose.Pdf.Text.TextState("Arial", true, false);
+            //reportInfoTableBoldTextState.FontSize = 12;
+            //Aspose.Pdf.Text.TextState reportInfoTableNormalTextState = new Aspose.Pdf.Text.TextState("Arial", false, false);
+            //reportInfoTableNormalTextState.FontSize = 10;
 
-            // report info part  
-            ReportInfoTable_Watertrax(pdfPage, reportInfoTableNormalTextState, reportInfoTableBoldTextState);
+            //// report info part  
+            //ReportInfoTable_Watertrax(pdfPage, reportInfoTableNormalTextState, reportInfoTableBoldTextState);
 
-            //Samples and Results text   
-            SampleAndResult(pdfPage, reportInfoTableBoldTextState);
+            ////Samples and Results text   
+            //SampleAndResult(pdfPage, reportInfoTableBoldTextState);
 
-            //Comments text  
-            CommentsTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
+            ////Comments text  
+            //CommentsTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
 
-            //TTO Certification text  
-            TTOCertificateTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
+            ////TTO Certification text  
+            //TTOCertificateTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
 
-            //Signature Statement text  
-            SignatureTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
+            ////Signature Statement text  
+            //SignatureTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
 
-            //Attachments 
-            AttachmentsTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
+            ////Attachments 
+            //AttachmentsTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
+
+            AddWatermark(pdfPage);
 
             // save the PDF file  
             var tick = DateTime.Now.Ticks;
@@ -206,8 +208,45 @@ namespace WindowsFormsApplication1
 
             string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
 
-            MessageBox.Show(elapsedTime);
 
+        }
+
+        private static void AddWatermark(Page pdfPage)
+        {
+            string annotationText = string.Empty;
+
+            annotationText = "DRFT";
+            // Create text stamp
+            TextStamp textStamp = new TextStamp(annotationText);
+            // Set properties of the stamp
+            textStamp.TopMargin = 50;
+            textStamp.RightMargin = 50;
+            textStamp.HorizontalAlignment = Aspose.Pdf.HorizontalAlignment.Right;
+            textStamp.VerticalAlignment = VerticalAlignment.Top;
+            textStamp.TextState.ForegroundColor = Color.IndianRed;
+            textStamp.TextState.FontSize = 30;
+
+            // Adding stamp on stamp collection 
+
+            pdfPage.AddStamp(textStamp);
+
+
+            //DefaultAppearance default_appearance = new DefaultAppearance("Arial", 56, System.Drawing.Color.IndianRed);
+
+            //FreeTextAnnotation textAnnotation = new FreeTextAnnotation(pdfPage, new Aspose.Pdf.Rectangle(0, 0, 0, 0), default_appearance);
+            //textAnnotation.Name = "Stamp";
+            //textAnnotation.Accept(new AnnotationSelector(textAnnotation));
+
+            //textAnnotation.Contents = textStamp.Value;
+            //// TextAnnotation.Open = true;
+            //// TextAnnotation.Icon = Aspose.Pdf.InteractiveFeatures.Annotations.TextIcon.Key;
+            //Border border = new Border(textAnnotation);
+            //border.Width = 0;
+            //border.Dash = new Dash(1, 1);
+            //textAnnotation.Border = border;
+            //textAnnotation.Rect = new Aspose.Pdf.Rectangle(0, 0, 0, 0);
+
+            //pdfPage.Annotations.Add(textAnnotation);
         }
 
         private static void HeaderTable(Page pdfPage)
