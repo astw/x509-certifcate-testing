@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using Aspose.Pdf;
+using Aspose.Pdf.Facades;
+using Aspose.Pdf.Generator;
 using Aspose.Pdf.InteractiveFeatures;
 using Aspose.Pdf.InteractiveFeatures.Annotations;
 using Aspose.Pdf.Text;
+using Color = Aspose.Pdf.Color;
+using Form = System.Windows.Forms.Form;
 using HorizontalAlignment = Aspose.Pdf.HorizontalAlignment;
 using MarginInfo = Aspose.Pdf.MarginInfo;
 using PageSize = Aspose.Pdf.Generator.PageSize;
+using Rectangle = Aspose.Pdf.Drawing.Rectangle;
 using Row = Aspose.Pdf.Row;
 
 namespace WindowsFormsApplication1
@@ -152,47 +158,115 @@ namespace WindowsFormsApplication1
         {
             Document pdfDocument = new Document();
 
+            System.Drawing.Image img = new Bitmap("draft.png");
+
             var pdfPage = pdfDocument.Pages.Add();
 
-            //pdfPage.SetPageSize(PageSize.LetterWidth, PageSize.LetterHeight);
-            //pdfPage.PageInfo.IsLandscape = true;
-            //pdfPage.PageInfo.Margin.Top = 30;
-            //pdfPage.PageInfo.Margin.Left = 10;
-            //pdfPage.PageInfo.Margin.Bottom = 20;
-            //pdfPage.PageInfo.Margin.Right = 10;
+            ///////-----------------------------------------------
+            /// 
 
-            //Aspose.Pdf.Text.TextState headTableBoldTextState = new Aspose.Pdf.Text.TextState("Arial", true, false);
-            //headTableBoldTextState.FontSize = 6;
-            //Aspose.Pdf.Text.TextState headTableNormalTextState = new Aspose.Pdf.Text.TextState("Arial", false, false);
-            //headTableNormalTextState.FontSize = 6;
+            TextStamp textStamp = new TextStamp("Header Text");
+            // Set properties of the stamp
+            textStamp.TopMargin = 10;
+            textStamp.HorizontalAlignment = HorizontalAlignment.Center;
+            textStamp.VerticalAlignment = VerticalAlignment.Top;
+            // Add header on all pages
+            foreach (Page page in pdfDocument.Pages)
+            {
+                page.AddStamp(textStamp);
+            }
+
+
+            pdfPage.SetPageSize(PageSize.LetterWidth, PageSize.LetterHeight);
+            pdfPage.PageInfo.IsLandscape = true;
+            pdfPage.PageInfo.Margin.Top = 20;
+            pdfPage.PageInfo.Margin.Left = 10;
+            pdfPage.PageInfo.Margin.Bottom = 20;
+            pdfPage.PageInfo.Margin.Right = 10;
+
+            Aspose.Pdf.Text.TextState headTableBoldTextState = new Aspose.Pdf.Text.TextState("Arial", true, false);
+            headTableBoldTextState.FontSize = 6;
+            Aspose.Pdf.Text.TextState headTableNormalTextState = new Aspose.Pdf.Text.TextState("Arial", false, false);
+            headTableNormalTextState.FontSize = 6;
 
             //// header and footer
-            //HeaderTable(pdfPage);
+            HeaderTable(pdfPage);
 
-            //Aspose.Pdf.Text.TextState reportInfoTableBoldTextState = new Aspose.Pdf.Text.TextState("Arial", true, false);
-            //reportInfoTableBoldTextState.FontSize = 12;
-            //Aspose.Pdf.Text.TextState reportInfoTableNormalTextState = new Aspose.Pdf.Text.TextState("Arial", false, false);
-            //reportInfoTableNormalTextState.FontSize = 10;
+            Aspose.Pdf.Text.TextState reportInfoTableBoldTextState = new Aspose.Pdf.Text.TextState("Arial", true, false);
+            reportInfoTableBoldTextState.FontSize = 10;
+            Aspose.Pdf.Text.TextState reportInfoTableNormalTextState = new Aspose.Pdf.Text.TextState("Arial", false, false);
+            reportInfoTableNormalTextState.FontSize = 10;
 
             //// report info part  
-            //ReportInfoTable_Watertrax(pdfPage, reportInfoTableNormalTextState, reportInfoTableBoldTextState);
+            ReportInfoTable_Watertrax(pdfPage, reportInfoTableNormalTextState, reportInfoTableBoldTextState);
 
             ////Samples and Results text   
-            //SampleAndResult(pdfPage, reportInfoTableBoldTextState);
+            SampleAndResult(pdfPage, reportInfoTableBoldTextState);
 
-            ////Comments text  
-            //CommentsTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
+            //Comments text  
+            CommentsTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
 
-            ////TTO Certification text  
-            //TTOCertificateTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
+            //TTO Certification text  
+            TTOCertificateTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
 
-            ////Signature Statement text  
-            //SignatureTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
+            //Signature Statement text  
+            SignatureTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
 
-            ////Attachments 
-            //AttachmentsTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
+            //Attachments 
+            AttachmentsTable(pdfPage, reportInfoTableBoldTextState, reportInfoTableNormalTextState);
 
-            AddWatermark(pdfPage);
+            //var test = pdfDocument.Pages.Add();
+            //test.Watermark = wm;
+
+            //// for watermak  
+
+            //Watermark wm = new Watermark(img, new Aspose.Pdf.Rectangle(PageSize.LetterWidth / 2, PageSize.LetterHeight, PageSize.LetterWidth / 2 - 200, PageSize.LetterHeight / 2 - 200));
+            //pdfPage.Watermark = wm;
+
+
+
+
+            pdfDocument.ProcessParagraphs();
+            // print number of pages in document
+            Console.WriteLine("Number of pages in document = " + pdfDocument.Pages.Count);
+
+            foreach (var page in pdfDocument.Pages)
+            {
+                AddWatermark(page as Page);
+            }
+
+            //AddWatermark(pdfPage);
+
+            //PdfFileStamp fileStamp = new PdfFileStamp(pdfDocument);
+            //Aspose.Pdf.Facades.Stamp stamp = new Aspose.Pdf.Facades.Stamp();
+            //stamp.BindImage("draft.png");
+            ////stamp.BindImage("draft.jpg");
+            //stamp.SetOrigin(PageSize.LetterWidth / 2 + 50, PageSize.LetterHeight - 300);
+            ////stamp.IsBackground = true;
+            //fileStamp.AddStamp(stamp);
+
+
+
+            ////
+
+            //ImageStamp imageStamp = new ImageStamp("mark.jpg");
+            ////imageStamp.Background = true; 
+            //imageStamp.XIndent = 100;
+            //imageStamp.YIndent = 100;
+
+            //imageStamp.Rotate = Rotation.on270;
+            //imageStamp.Opacity = 0.5;
+            //// Add stamp to particular page
+            //pdfDocument.Pages[1].AddStamp(imageStamp);
+
+            //foreach (Page page in pdfDocument.Pages)
+            //{
+            //    page.AddStamp(imageStamp);
+            //}
+
+            //------------------------------------------------------------------
+
+            //------------------------------------------------------------------
 
             // save the PDF file  
             var tick = DateTime.Now.Ticks;
@@ -215,38 +289,44 @@ namespace WindowsFormsApplication1
         {
             string annotationText = string.Empty;
 
-            annotationText = "DRFT";
+            annotationText = "DRAFT";
             // Create text stamp
             TextStamp textStamp = new TextStamp(annotationText);
             // Set properties of the stamp
-            textStamp.TopMargin = 50;
-            textStamp.RightMargin = 50;
-            textStamp.HorizontalAlignment = Aspose.Pdf.HorizontalAlignment.Right;
-            textStamp.VerticalAlignment = VerticalAlignment.Top;
-            textStamp.TextState.ForegroundColor = Color.IndianRed;
-            textStamp.TextState.FontSize = 30;
+            //textStamp.TopMargin = 190;
+            //textStamp.RightMargin = 10;
+            textStamp.HorizontalAlignment = Aspose.Pdf.HorizontalAlignment.Center;
+            textStamp.VerticalAlignment = VerticalAlignment.Center;
+            textStamp.TextState.ForegroundColor = Color.Gray;
+            textStamp.TextState.FontSize = 160;
+            textStamp.Opacity = 0.3;
+            textStamp.RotateAngle = 45;
 
             // Adding stamp on stamp collection 
 
             pdfPage.AddStamp(textStamp);
 
 
-            //DefaultAppearance default_appearance = new DefaultAppearance("Arial", 56, System.Drawing.Color.IndianRed);
+            DefaultAppearance default_appearance = new DefaultAppearance("Arial", 56, System.Drawing.Color.IndianRed);
 
-            //FreeTextAnnotation textAnnotation = new FreeTextAnnotation(pdfPage, new Aspose.Pdf.Rectangle(0, 0, 0, 0), default_appearance);
-            //textAnnotation.Name = "Stamp";
-            //textAnnotation.Accept(new AnnotationSelector(textAnnotation));
+            FreeTextAnnotation textAnnotation = new FreeTextAnnotation(pdfPage, new Aspose.Pdf.Rectangle(0, 0, 0, 0), default_appearance);
+            textAnnotation.Name = "Stamp";
+            textAnnotation.Accept(new AnnotationSelector(textAnnotation));
 
-            //textAnnotation.Contents = textStamp.Value;
-            //// TextAnnotation.Open = true;
-            //// TextAnnotation.Icon = Aspose.Pdf.InteractiveFeatures.Annotations.TextIcon.Key;
-            //Border border = new Border(textAnnotation);
-            //border.Width = 0;
-            //border.Dash = new Dash(1, 1);
-            //textAnnotation.Border = border;
-            //textAnnotation.Rect = new Aspose.Pdf.Rectangle(0, 0, 0, 0);
+            textAnnotation.Contents = textStamp.Value;
+            // TextAnnotation.Open = true;
+            // TextAnnotation.Icon = Aspose.Pdf.InteractiveFeatures.Annotations.TextIcon.Key;
+            Border border = new Border(textAnnotation);
+            border.Width = 0;
+            border.Dash = new Dash(1, 1);
+            textAnnotation.Border = border;
+            textAnnotation.Rect = new Aspose.Pdf.Rectangle(0, 0, 0, 0);
 
-            //pdfPage.Annotations.Add(textAnnotation);
+            pdfPage.Annotations.Add(textAnnotation);
+
+
+
+
         }
 
         private static void HeaderTable(Page pdfPage)
@@ -254,7 +334,7 @@ namespace WindowsFormsApplication1
             Aspose.Pdf.Table headerTable = new Aspose.Pdf.Table();
 
             pdfPage.Header = new Aspose.Pdf.HeaderFooter();
-            var headerMargin = new MarginInfo(10, 20, 10, 5);
+            var headerMargin = new MarginInfo(10, 10, 10, 5);
             pdfPage.Header.Margin = headerMargin;
 
             pdfPage.Header.Paragraphs.Add(headerTable);
@@ -267,23 +347,23 @@ namespace WindowsFormsApplication1
             Aspose.Pdf.Text.TextState leftHeader = new Aspose.Pdf.Text.TextState("Arial", false, false);
             leftHeader.FontSize = 6;
             leftHeader.FontStyle = FontStyles.Bold;
-            leftHeader.ForegroundColor = Aspose.Pdf.Color.Gray;
+            leftHeader.ForegroundColor = Aspose.Pdf.Color.LightGray;
             leftHeader.HorizontalAlignment = HorizontalAlignment.Left;
 
             Aspose.Pdf.Text.TextState centerHeader = new Aspose.Pdf.Text.TextState("Arial", false, false);
             centerHeader.FontSize = 6;
             centerHeader.FontStyle = FontStyles.Bold;
-            centerHeader.ForegroundColor = Aspose.Pdf.Color.Gray;
+            centerHeader.ForegroundColor = Aspose.Pdf.Color.LightGray;
             centerHeader.HorizontalAlignment = HorizontalAlignment.Center;
 
             Aspose.Pdf.Text.TextState rightHeader = new Aspose.Pdf.Text.TextState("Arial", false, false);
             rightHeader.FontSize = 6;
             rightHeader.FontStyle = FontStyles.Bold;
-            rightHeader.ForegroundColor = Aspose.Pdf.Color.Gray;
+            rightHeader.ForegroundColor = Aspose.Pdf.Color.LightGray;
             rightHeader.HorizontalAlignment = HorizontalAlignment.Right;
 
-            headerTable.ColumnWidths = "33.3% 33.3% 33.3%";
-            headerTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 3, 2, 3);
+            headerTable.ColumnWidths = "33% 34% 33%";
+            headerTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 2, 2, 2);
             headerTable.Broken = Aspose.Pdf.TableBroken.None;
             headerTable.Margin.Top = 5f;
 
@@ -293,7 +373,7 @@ namespace WindowsFormsApplication1
 
             Row row = headerTable.Rows.Add();
             row.Cells.Add("City Of Grand Rapids");
-            row.Cells.Add("Copy Of Record");
+            row.Cells.Add("Copy Of Record (DRAFT)");
             row.Cells.Add("VALLEY CITY PLATING, INC");
 
 
@@ -328,9 +408,9 @@ namespace WindowsFormsApplication1
             pdfPage.Footer = new Aspose.Pdf.HeaderFooter();
             pdfPage.Footer.Paragraphs.Add(footerTable);
 
-            headTableNormalTextState.ForegroundColor = Aspose.Pdf.Color.Gray;
+            headTableNormalTextState.ForegroundColor = Aspose.Pdf.Color.LightGray;
 
-            footerTable.ColumnWidths = "33.3% 33.3% 33.3%";
+            footerTable.ColumnWidths = "33% 34% 33%";
             footerTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 3, 2, 3);
             footerTable.Broken = Aspose.Pdf.TableBroken.None;
             footerTable.Margin.Bottom = -5f;
@@ -356,7 +436,7 @@ namespace WindowsFormsApplication1
             //var tableOrder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.Top | Aspose.Pdf.BorderSide.Bottom, 1F);
             //reportInfoTable.Border = tableOrder;
             //reportInfoTable.DefaultCellBorder = tableOrder;
-            reportInfoTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(3, 3, 3, 3);
+            reportInfoTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 2, 2, 2);
 
             reportInfoTable.Margin.Top = 20f;
 
@@ -384,7 +464,7 @@ namespace WindowsFormsApplication1
             //--------------------------------Row 2
             // empty row
             row = reportInfoTable.Rows.Add();
-            row.MinRowHeight = 30;
+            row.MinRowHeight = 10;
 
             //--------------------------------Row 3
             row = reportInfoTable.Rows.Add();
@@ -582,7 +662,7 @@ namespace WindowsFormsApplication1
             // ------------------------------------------------------------ row 2
             // empty row
             row = reportInfoTable.Rows.Add();
-            row.MinRowHeight = 30;
+            //    row.MinRowHeight = 16;
 
             // ------------------------------------------------------------ row 3
             row = reportInfoTable.Rows.Add();
@@ -654,12 +734,20 @@ namespace WindowsFormsApplication1
         private static void AttachmentsTable(Page pdfPage, TextState reportInfoTableBoldTextState, TextState reportInfoTableNormalTextState)
         {
             var attachmentsTable = new Aspose.Pdf.Table();
-            attachmentsTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 3, 2, 3);
+            attachmentsTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 2, 2, 2);
             pdfPage.Paragraphs.Add(attachmentsTable);
 
             attachmentsTable.Margin.Top = 20;
-            attachmentsTable.ColumnWidths = "33% 33% 33%";
+            attachmentsTable.ColumnWidths = "33% 34% 33%";
             var row = attachmentsTable.Rows.Add();
+
+            Aspose.Pdf.Text.TextState attachmentFont = new Aspose.Pdf.Text.TextState("Arial", false, false);
+            attachmentFont.FontSize = 8;
+
+            Aspose.Pdf.Text.TextState attachmentFontTitle = new Aspose.Pdf.Text.TextState("Arial", false, false);
+            attachmentFontTitle.FontSize = 10;
+            attachmentFontTitle.FontStyle = FontStyles.Bold;
+
 
             var cell = row.Cells.Add("Attachments", reportInfoTableBoldTextState);
             cell.ColSpan = 3;
@@ -674,15 +762,16 @@ namespace WindowsFormsApplication1
             {
                 Border = tableOrder,
                 DefaultCellBorder = tableOrder,
-                DefaultCellPadding = new Aspose.Pdf.MarginInfo(3, 3, 3, 3)
+                DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 2, 2, 2)
             };
             attachmentFilesTable.Margin.Top = 10;
 
-            attachmentFilesTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(3, 3, 3, 3);
+            attachmentFilesTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 2, 2, 2);
             pdfPage.Paragraphs.Add(attachmentFilesTable);
 
-            attachmentFilesTable.ColumnWidths = "33% 33% 33%";
+            attachmentFilesTable.ColumnWidths = "33% 34% 33%";
             row = attachmentFilesTable.Rows.Add();
+            row.DefaultCellTextState = attachmentFontTitle;
             row.BackgroundColor = Aspose.Pdf.Color.LightGray;
 
             row.Cells.Add("Original File Name");
@@ -692,6 +781,7 @@ namespace WindowsFormsApplication1
             for (int i = 1; i < 5; i++)
             {
                 row = attachmentFilesTable.Rows.Add();
+                row.DefaultCellTextState = attachmentFont;
                 row.Cells.Add("Lab Analysis Report.pdf");
                 row.Cells.Add("Lab Analysis Report1.pdf");
                 row.Cells.Add("Lab Analysis Report");
@@ -701,116 +791,150 @@ namespace WindowsFormsApplication1
         private static void SignatureTable(Page pdfPage, TextState reportInfoTableBoldTextState, TextState reportInfoTableNormalTextState)
         {
             var signatureStatmentTable = new Aspose.Pdf.Table();
-            signatureStatmentTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 3, 2, 3);
+            signatureStatmentTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 2, 2, 2);
             pdfPage.Paragraphs.Add(signatureStatmentTable);
 
             signatureStatmentTable.Margin.Top = 20;
-            signatureStatmentTable.ColumnWidths = "96%";
+            signatureStatmentTable.ColumnWidths = "100%";
             var row = signatureStatmentTable.Rows.Add();
 
             row.Cells.Add("Signature Statement", reportInfoTableBoldTextState);
             row = signatureStatmentTable.Rows.Add();
-            row.Cells.Add("I certifiy.....", reportInfoTableNormalTextState);
+            row.Cells.Add("I certify under penalty of law that this document and all attachments were prepared under my direction or supervision in accordance with a system designed to assure that qualified personnel properly gathered and evaluated the information submitted. Based on my inquiry of the person or persons who managed the system, or those persons directly responsible for gathering information, the information submitted is, to the best of my knowledge and belief, true, accurate and complete. I am aware that there are significant penalties for submitting false information, including the possibility of fines and imprisonment for a knowing violation.", reportInfoTableNormalTextState);
         }
 
         private static void TTOCertificateTable(Page pdfPage, TextState reportInfoTableBoldTextState, TextState reportInfoTableNormalTextState)
         {
             var ttoTextTable = new Aspose.Pdf.Table();
-            ttoTextTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 3, 2, 3);
+            ttoTextTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 2, 2, 2);
             pdfPage.Paragraphs.Add(ttoTextTable);
 
             ttoTextTable.Margin.Top = 20;
-            ttoTextTable.ColumnWidths = "96%";
+            ttoTextTable.ColumnWidths = "100%";
             var row = ttoTextTable.Rows.Add();
 
             row.Cells.Add("TTO Certification", reportInfoTableBoldTextState);
             row = ttoTextTable.Rows.Add();
             row.Cells.Add(
-                          "Based on my inquiry of the person or persons directly responsible for managing compliance with the pretreatment standard for total toxic organics (T.T.O.), I certify that to the best of my knowledge and belief, no dumping of concentrated toxic organics into the wastewater has occurred since the filing of the last analysis report.  I further certify that this company is implementing the solvent management plan submitted to the Control Authority.",
+                          "Based on my inquiry of the person or persons directly responsible for managing compliance with the pretreatment standard for total toxic organics (T.T.O.), I certify that to the best of my knowledge and belief, no dumping of concentrated toxic organics into the wastewater has occurred since the filing of the last analysis report. I further certify that this company is implementing the solvent management plan submitted to the Control Authority.",
                           reportInfoTableNormalTextState);
         }
 
         private static void CommentsTable(Page pdfPage, TextState reportInfoTableBoldTextState, TextState reportInfoTableNormalTextState)
         {
             var commentsTextTable = new Aspose.Pdf.Table();
-            commentsTextTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 3, 2, 3);
+            commentsTextTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 2, 2, 2);
             pdfPage.Paragraphs.Add(commentsTextTable);
 
             commentsTextTable.Margin.Top = 20;
-            commentsTextTable.ColumnWidths = "96%";
+            commentsTextTable.ColumnWidths = "100%";
             var row = commentsTextTable.Rows.Add();
             row.Cells.Add("Comments", reportInfoTableBoldTextState);
             row = commentsTextTable.Rows.Add();
-            row.Cells.Add("User entered comments here....", reportInfoTableNormalTextState);
+            row.Cells.Add("pH prob in final stage malfunctioned. For corrective action mode sure it is totally immersed in solution. Two follow-up readings are included.", reportInfoTableNormalTextState);
         }
 
         private static void SampleAndResult(Page pdfPage, TextState reportInfoTableBoldTextState)
         {
             var sampleResultsTextTable = new Aspose.Pdf.Table();
-            sampleResultsTextTable.IsKeptWithNext = true;
+            //    sampleResultsTextTable.IsKeptWithNext = true;
 
             pdfPage.Paragraphs.Add(sampleResultsTextTable);
 
             sampleResultsTextTable.Margin.Top = 20;
+            sampleResultsTextTable.Margin.Bottom = 10;
 
             sampleResultsTextTable.ColumnWidths = "100%";
             var row = sampleResultsTextTable.Rows.Add();
             // Need to be bold
             row.Cells.Add("Samples and Results", reportInfoTableBoldTextState);
 
-            var tableOrder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.All, 0.1F);
-
-            //Samples and Results table  
-            var sampleResultsTable = new Aspose.Pdf.Table
+            for (int pi = 0; pi < 5; pi++)
             {
-                Border = tableOrder,
-                DefaultCellBorder = tableOrder,
-                DefaultCellPadding = new Aspose.Pdf.MarginInfo(3, 3, 3, 3)
-            };
+                var tableOrder = new Aspose.Pdf.BorderInfo(Aspose.Pdf.BorderSide.All, 0.1F);
 
-            pdfPage.Paragraphs.Add(sampleResultsTable);
+                //Samples and Results table  
+                var sampleResultsTable = new Aspose.Pdf.Table
+                {
+                    Border = tableOrder,
+                    DefaultCellBorder = tableOrder,
+                    DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 2, 2, 2)
+                };
 
-            sampleResultsTable.ColumnWidths = "6% 16.2% 8.3% 5.5% 9% 9% 7.3% 7.8% 8% 5.3% 9% 7.4%";
+                pdfPage.Paragraphs.Add(sampleResultsTable);
 
-            // Monitoring Point row 
-            row = sampleResultsTable.Rows.Add();
-            row.BackgroundColor = Aspose.Pdf.Color.LightGray;
-            row.Border = tableOrder;
-            var cell = row.Cells.Add("Monitoring Point:40");
-            cell.ColSpan = 12;
+                sampleResultsTable.ColumnWidths = "6% 19% 11.6% 5.2% 7.1% 7.1% 7.3% 7.8% 8% 5.3% 7.1% 8.5%";
 
-            row = sampleResultsTable.Rows.Add();
-            row.BackgroundColor = Aspose.Pdf.Color.LightGray;
+                Aspose.Pdf.Text.TextState headerFont = new Aspose.Pdf.Text.TextState("Arial", false, false);
+                headerFont.FontSize = 10;
+                headerFont.FontStyle = FontStyles.Bold;
+                headerFont.HorizontalAlignment = HorizontalAlignment.Center;
 
-            row.Cells.Add("Month");
-            row.Cells.Add("Parameter");
-            row.Cells.Add("Result");
-            row.Cells.Add("MDL");
-            row.Cells.Add("Sample Start");
-            row.Cells.Add("Sample End");
-            row.Cells.Add("Collection Method");
-            row.Cells.Add("Lab Sample ID");
-            row.Cells.Add("Analys Method");
-            row.Cells.Add("EPA Method");
-            row.Cells.Add("Analys Date");
-            row.Cells.Add("Flow");
 
-            //// Simulate data
-            for (int i = 1; i < 60; i++)
-            {
+
+                Aspose.Pdf.Text.TextState monitorPointFont = new Aspose.Pdf.Text.TextState("Arial", false, false);
+                monitorPointFont.FontSize = 10;
+                monitorPointFont.FontStyle = FontStyles.Bold;
+                monitorPointFont.HorizontalAlignment = HorizontalAlignment.Left;
+
+
+                // Monitoring Point row 
                 row = sampleResultsTable.Rows.Add();
-                row.Cells.Add("January");
-                row.Cells.Add("Arenic");
-                row.Cells.Add("0.92 mg/L");
-                row.Cells.Add("126.012");
-                row.Cells.Add("1/14/2016 8:00 AM");
-                row.Cells.Add("1/15/2016 8:00 AM");
-                row.Cells.Add("Comp");
-                row.Cells.Add("1245677");
-                row.Cells.Add("200.7");
-                row.Cells.Add("Yes");
-                row.Cells.Add("1/20/2016 08:00 AM");
-                row.Cells.Add("0.05 mgd");
+                row.DefaultCellTextState = monitorPointFont;
+
+                row.BackgroundColor = Aspose.Pdf.Color.LightGray;
+                row.Border = tableOrder;
+                var cell = row.Cells.Add("Monitoring Point:40");
+                cell.ColSpan = 12;
+
+                row = sampleResultsTable.Rows.Add();
+                row.DefaultCellTextState = headerFont;
+
+                row.BackgroundColor = Aspose.Pdf.Color.LightGray;
+
+                row.Cells.Add("Month");
+                row.Cells.Add("Parameter");
+                row.Cells.Add("Result");
+                row.Cells.Add("MDL");
+                row.Cells.Add("Sample Start");
+                row.Cells.Add("Sample End");
+                row.Cells.Add("Collection Method");
+                row.Cells.Add("Lab Sample ID");
+                row.Cells.Add("Analys Method");
+                row.Cells.Add("EPA Method");
+                row.Cells.Add("Analysis Date");
+                row.Cells.Add("Flow");
+
+                //// Simulate data
+                /// 
+                Aspose.Pdf.Text.TextState cellFont = new Aspose.Pdf.Text.TextState("Arial", false, false);
+                cellFont.FontSize = 8;
+
+                Aspose.Pdf.Text.TextState rightCellFont = new Aspose.Pdf.Text.TextState("Arial", false, false);
+                rightCellFont.HorizontalAlignment = HorizontalAlignment.Right;
+                rightCellFont.FontSize = 8;
+
+                Aspose.Pdf.Text.TextState centerFont = new Aspose.Pdf.Text.TextState("Arial", false, false);
+                centerFont.HorizontalAlignment = HorizontalAlignment.Center;
+                centerFont.FontSize = 8;
+
+                for (int i = 0; i < 12; i++)
+                {
+                    DateTime date = DateTime.Parse("12/15/2016 12:32 AM");
+                    row = sampleResultsTable.Rows.Add();
+                    row.Cells.Add(date.AddMonths(i).ToString("MMMM"), centerFont);
+                    row.Cells.Add("Volatile Organic Compounds (EPA 624)", cellFont);
+                    row.Cells.Add("0.0077300000 pH Units", rightCellFont);
+                    row.Cells.Add("0.00005", rightCellFont);
+                    row.Cells.Add(date.AddHours(i).ToString("MM/dd/yyyy hh:mm tt"), centerFont);
+                    row.Cells.Add(date.AddHours(i + 12).ToString("MM/dd/yyyy hh:mm tt"), centerFont);
+                    row.Cells.Add("24 hour flow", centerFont);
+                    row.Cells.Add("AB62629/AB62741", centerFont);
+                    row.Cells.Add("EPA6020A & 200.2", centerFont);
+                    row.Cells.Add("Yes", centerFont);
+                    row.Cells.Add(date.AddHours(i + 6).ToString("MM/dd/yyyy hh:mm tt"), centerFont);
+                    row.Cells.Add("46499.453 gpd", rightCellFont);
+                }
             }
         }
 
