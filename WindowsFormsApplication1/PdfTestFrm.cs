@@ -18,6 +18,20 @@ using Row = Aspose.Pdf.Row;
 
 namespace WindowsFormsApplication1
 {
+
+    public static class StringExtension
+    {
+        public static string GetValueOrEmptyString(this string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+
+            return value;
+        }
+    }
+
     public partial class PdfTestFrm : Form
     {
         public PdfTestFrm()
@@ -28,8 +42,14 @@ namespace WindowsFormsApplication1
             pdflicense.SetLicense(@"C:\work\Aspose\Aspose Licence\Aspose.Pdf.lic");
             pdflicense.Embedded = true;
 
+            string value = null;
+
+            var t = value.GetValueOrEmptyString();
+
+            MessageBox.Show(t + "1");
+
             //     NestedTable();
-            CorPdf();
+            //CorPdf();
             //    LinePdf();
         }
 
@@ -790,9 +810,12 @@ namespace WindowsFormsApplication1
 
         private static void SignatureTable(Page pdfPage, TextState reportInfoTableBoldTextState, TextState reportInfoTableNormalTextState)
         {
+
             var signatureStatmentTable = new Aspose.Pdf.Table();
             signatureStatmentTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 2, 2, 2);
             pdfPage.Paragraphs.Add(signatureStatmentTable);
+
+            signatureStatmentTable.Broken = TableBroken.VerticalInSamePage;
 
             signatureStatmentTable.Margin.Top = 20;
             signatureStatmentTable.ColumnWidths = "100%";
@@ -823,6 +846,8 @@ namespace WindowsFormsApplication1
         private static void CommentsTable(Page pdfPage, TextState reportInfoTableBoldTextState, TextState reportInfoTableNormalTextState)
         {
             var commentsTextTable = new Aspose.Pdf.Table();
+            commentsTextTable.Broken = TableBroken.VerticalInSamePage;
+            ;
             commentsTextTable.DefaultCellPadding = new Aspose.Pdf.MarginInfo(2, 2, 2, 2);
             pdfPage.Paragraphs.Add(commentsTextTable);
 
@@ -831,7 +856,7 @@ namespace WindowsFormsApplication1
             var row = commentsTextTable.Rows.Add();
             row.Cells.Add("Comments", reportInfoTableBoldTextState);
             row = commentsTextTable.Rows.Add();
-            row.Cells.Add("pH prob in final stage malfunctioned. For corrective action mode sure it is totally immersed in solution. Two follow-up readings are included.", reportInfoTableNormalTextState);
+            row.Cells.Add("pH prob in final stage malfunctioned. For corrective action mode sure it is totally immersed in solution. Two follow-up readings are included.pH prob in final stage malfunctioned. For corrective action mode sure it is totally immersed in solution. Two follow-up readings are included.pH prob in final stage malfunctioned. For corrective action mode sure it is totally immersed in solution. Two follow-up readings are included.pH prob in final stage malfunctioned. For corrective action mode sure it is totally immersed in solution. Two follow-up readings are included. pH prob in final stage malfunctioned. For corrective action mode sure it is totally immersed in solution. Two follow-up readings are included.", reportInfoTableNormalTextState);
         }
 
         private static void SampleAndResult(Page pdfPage, TextState reportInfoTableBoldTextState)
@@ -918,7 +943,7 @@ namespace WindowsFormsApplication1
                 centerFont.HorizontalAlignment = HorizontalAlignment.Center;
                 centerFont.FontSize = 8;
 
-                for (int i = 0; i < 12; i++)
+                for (int i = 0; i < 13; i++)
                 {
                     DateTime date = DateTime.Parse("12/15/2016 12:32 AM");
                     row = sampleResultsTable.Rows.Add();

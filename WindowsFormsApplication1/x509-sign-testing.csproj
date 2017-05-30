@@ -78,9 +78,13 @@
     <Compile Include="ImageReduceForm.Designer.cs">
       <DependentUpon>ImageReduceForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="PdfTestFrm.cs">
+    <Compile Include="PallaTest.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PallaTest.Designer.cs">
+      <DependentUpon>PallaTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PdfTestFrm.cs" />
     <Compile Include="PdfTestFrm.Designer.cs">
       <DependentUpon>PdfTestFrm.cs</DependentUpon>
     </Compile>
@@ -106,6 +110,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ImageReduceForm.resx">
       <DependentUpon>ImageReduceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PallaTest.resx">
+      <DependentUpon>PallaTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PdfTestFrm.resx">
       <DependentUpon>PdfTestFrm.cs</DependentUpon>

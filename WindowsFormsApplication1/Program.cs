@@ -18,8 +18,9 @@ namespace WindowsFormsApplication1
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
             //Application.Run(new ImageReduceForm());  
-            Application.Run(new PdfTestFrm());
+            //Application.Run(new PdfTestFrm());
             //Application.Run(new XmlSortFrm());
+            Application.Run(new PallaTest());
         }
     }
 }
