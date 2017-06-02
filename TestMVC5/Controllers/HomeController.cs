@@ -12,10 +12,15 @@ namespace TestMVC5.Controllers
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public string Now => DateTime.Now.ToString("T");
     }
+
+
     [LogFilter]
     public class HomeController : Controller
     {
+        [OutputCache(Duration = 10)]
         public ActionResult Index()
         {
             var ab = new User

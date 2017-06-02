@@ -10,6 +10,11 @@ namespace TestMVC5
     {
         public void Init(HttpApplication context)
         {
+            //context.Context.Session["abc"] = "abcValue";
+            context.Context.Items["perRequestValue"] = "perRequestValue";
+
+            context.Context.Cache["CurrentAppDomainCache"] = "This is available for current app domain, so it is global cache ";
+
             context.BeginRequest += new EventHandler(this.Context_BeginRequest);
             context.EndRequest += new EventHandler(this.Context_EndRequest);
         }

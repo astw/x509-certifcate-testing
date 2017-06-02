@@ -10,6 +10,9 @@ namespace TestMVC5.Handler
     {
         public void ProcessRequest(HttpContext context)
         {
+            context.Session["abc"] = "abcValue";
+            context.Items["perRequestValue"] = "perRequestValue";
+
             context.Response.Write("The page request is " + context.Request.RawUrl.ToString());
             StreamWriter sw = new StreamWriter(@"C:\requestLog.txt", true);
             sw.WriteLine("Page requested at " + DateTime.Now.ToString() +
