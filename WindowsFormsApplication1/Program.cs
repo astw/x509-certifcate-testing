@@ -20,7 +20,8 @@ namespace WindowsFormsApplication1
             //Application.Run(new ImageReduceForm());  
             //Application.Run(new PdfTestFrm());
             //Application.Run(new XmlSortFrm());
-            Application.Run(new PallaTest());
+            //Application.Run(new PallaTest());
+            Application.Run(new TestForm());
         }
     }
 }

@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
@@ -15,6 +17,7 @@ namespace WindowsFormsApplication1
 
         public DigitalSignManager(string certificateFile, string certificatePassword)
         {
+            
             this.certificateFile = certificateFile;
             this.certificatePassword = certificatePassword;
             try
@@ -32,9 +35,9 @@ namespace WindowsFormsApplication1
             {
                 System.Console.WriteLine(e.Message);
                 throw;
-            }
+            } 
         }
-
+  
         public string GetDataSignature(byte[] data)
         {
             return Convert.ToBase64String(this.SignData(data));

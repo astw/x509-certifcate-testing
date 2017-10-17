@@ -24,7 +24,7 @@ namespace WindowsFormsApplication1
         public TestForm()
         {
             InitializeComponent();
-
+             
             this.digitalSignManager = new DigitalSignManager(certFile, certPassword);
 
             ICoreManifestSerializer xmlCoreManifestSerializer = new XmlCoreManifestSerializer();
@@ -61,6 +61,11 @@ namespace WindowsFormsApplication1
                     MessageBox.Show("Sigature bad");
                 }
             } 
+        }
+
+        private void TestForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
